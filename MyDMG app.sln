@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36109.1 d17.14
+VisualStudioVersion = 17.14.36109.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDMG app", "MyDMG app\MyDMG app.csproj", "{CAEFFF81-DF9A-4C4D-8D58-7353DBBE1F35}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{D9ABA8D9-BBCF-40A0-94F8-252D04573784}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BL", "BL\BL.csproj", "{84D2073F-B6D3-4E67-923C-6F3BA70BA90F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConectorAppWrite", "ConectorAppWrite\ConectorAppWrite.csproj", "{13808F54-BE98-40D6-B0E5-4BD815DE03B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{84D2073F-B6D3-4E67-923C-6F3BA70BA90F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84D2073F-B6D3-4E67-923C-6F3BA70BA90F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84D2073F-B6D3-4E67-923C-6F3BA70BA90F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13808F54-BE98-40D6-B0E5-4BD815DE03B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13808F54-BE98-40D6-B0E5-4BD815DE03B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13808F54-BE98-40D6-B0E5-4BD815DE03B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13808F54-BE98-40D6-B0E5-4BD815DE03B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,10 +4,15 @@
              x:Class="MyDMG_app.Views.HomePage"
              Title="Inicio">
 
-    <VerticalStackLayout Padding="30" Spacing="20">
-        <Label Text="Bienvenido a MyDMG App"
-               FontSize="24"
-               HorizontalOptions="Center" />
-        <Button Text="Cerrar Sesión" Command="{Binding LogoutCommand}" />
+    <VerticalStackLayout Padding="30" Spacing="20">  
+        <Label Text="Bienvenido a MyDMG App"  
+               FontSize="24"  
+               HorizontalOptions="Center" />  
+
+        <Label Text="{Binding NombreUsuario}"  
+               FontSize="18"  
+               HorizontalOptions="Center" />  
+
+        <Button Text="Cerrar Sesión" Command="{Binding LogoutCommand}" />  
     </VerticalStackLayout>
 </ContentPage>

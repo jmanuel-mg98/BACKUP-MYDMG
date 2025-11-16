@@ -1,11 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
 
+
 namespace MyDMG_app
 {
     public static class MauiProgram
     {
         public static MauiApp CreateMauiApp()
         {
+            ConectorAppWrite.ConectorAppwrite.inicializar();
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()

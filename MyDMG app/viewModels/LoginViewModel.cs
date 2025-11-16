@@ -44,6 +44,10 @@ namespace MyDMG_app.ViewModels
                     // Guardar el usuario en almacenamiento seguro
                     await SecureStorage.Default.SetAsync("usuarioEmail", Email);
 
+                    // Limpiar los campos de entrada
+                    Email = string.Empty;
+                    Password = string.Empty;
+
                     // Navegar a la página principal
                     await Shell.Current.GoToAsync("//HomePage");
                 }
