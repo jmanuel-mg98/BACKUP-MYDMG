@@ -1,0 +1,17 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"  
+             x:Class="MyDMG_app.Views.LoginPage"  
+             xmlns:viewModels="clr-namespace:MyDMG_app.ViewModels"  
+             Title="Iniciar Sesión">  
+
+    <ContentPage.BindingContext>  
+        <viewModels:LoginViewModel />  
+    </ContentPage.BindingContext>  
+
+    <VerticalStackLayout Padding="30" Spacing="20">  
+        <Entry Placeholder="Correo electrónico" Text="{Binding Email}" Keyboard="Email" />  
+        <Entry Placeholder="Contraseña" Text="{Binding Password}" IsPassword="True" />  
+        <Button Text="Iniciar Sesión" Command="{Binding LoginCommand}" />  
+        <Button Text="Registrarse" Command="{Binding RegistrarCommand}" />  
+    </VerticalStackLayout>  
+</ContentPage>
