@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MyDMG_app.ViewModels"
              x:Class="MyDMG_app.Views.HomePage"
              Title="Inicio">
 
-    <VerticalStackLayout Padding="30" Spacing="20">  
+    <ContentPage.BindingContext>
+        <viewModels:HomeViewModel />
+    </ContentPage.BindingContext>
+
+    <VerticalStackLayout Padding="30" Spacing="20">
         <Label Text="Bienvenido a MyDMG App"  
                FontSize="24"  
-               HorizontalOptions="Center" />  
+               HorizontalOptions="Center" />
 
         <Label Text="{Binding NombreUsuario}"  
                FontSize="18"  
-               HorizontalOptions="Center" />  
+               HorizontalOptions="Center" />
 
-        <Button Text="Cerrar Sesión" Command="{Binding LogoutCommand}" />  
+        <Label Text="{Binding Hermandad}"  
+               FontSize="18"  
+               HorizontalOptions="Center" />
+
+        <Button Text="Cerrar Sesión" Command="{Binding LogoutCommand}" />
     </VerticalStackLayout>
 </ContentPage>

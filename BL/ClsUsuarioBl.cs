@@ -1,5 +1,6 @@
 ﻿using ENT;
 using DAL;
+using System.Threading.Tasks;
 
 namespace BL
 {
@@ -21,20 +22,24 @@ namespace BL
 
         public async Task<bool> RegistrarUsuarioCompleto(ClsUsuario usuario)
         {
-            // 1️⃣ Registrar en Auth
+            // Registrar en Auth
             bool ok = await _usuarioDal.RegistrarAsync(usuario);
             if (!ok) return false;
 
-            // 2️⃣ Iniciar sesión para obtener UserId
+            // Iniciar sesión para obtener UserId
             bool loginOk = await _usuarioDal.LoginAsync(usuario.Email, usuario.Password);
             if (!loginOk) return false;
 
-            // 3️⃣ Crear detalle en DB
+            // Crear detalle en DB
             bool detalleOk = await _detalleUsuarioDal.CrearDetalleUsuarioAsync(usuario);
             return detalleOk;
         }
+
+        // 🔹 Nuevo método para obtener detalles del usuario desde BL
+        public async Task<ClsUsuario> ObtenerDetalleUsuarioActualAsync(string userId)
+        {
+            return await _detalleUsuarioDal.ObtenerDetalleUsuarioAsync(userId);
+        }
     }
 }
-
-
 
