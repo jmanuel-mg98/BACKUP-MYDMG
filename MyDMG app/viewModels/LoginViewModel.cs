@@ -3,6 +3,9 @@ using BL;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using ConectorAppWrite;
+using Appwrite.Models;
+using Microsoft.Maui.Storage;
 
 namespace MyDMG_app.ViewModels
 {
@@ -25,30 +28,52 @@ namespace MyDMG_app.ViewModels
         }
 
         public ICommand LoginCommand { get; }
-        public ICommand RegistrarCommand { get; }
+        public ICommand GoToRegisterCommand { get; }
 
         public LoginViewModel()
         {
             _usuarioBL = new ClsUsuarioBL();
+
             LoginCommand = new Command(async () => await Login());
-            RegistrarCommand = new Command(async () => await Registrar());
+            GoToRegisterCommand = new Command(async () => await Shell.Current.GoToAsync("//RegisterPage"));
+
+            // Verificar si hay sesión activa al iniciar
+            _ = VerificarSesionActiva();
+        }
+
+        private async Task VerificarSesionActiva()
+        {
+            try
+            {
+                Session? sesionActual = await ConectorAppwrite.GetSesionActual();
+
+                if (sesionActual != null)
+                {
+                    await Shell.Current.GoToAsync("//HomePage");
+                }
+            }
+            catch
+            {
+                // Ignorar errores de sesión, simplemente no navegar
+            }
         }
 
         private async Task Login()
         {
             try
             {
-                bool result = await _usuarioBL.LoginAsync(Email, Password);
-                if (result)
+                bool loginExitoso = await _usuarioBL.LoginAsync(Email, Password);
+
+                if (loginExitoso)
                 {
-                    // Guardar el usuario en almacenamiento seguro
+                    // Guardar email en almacenamiento seguro
                     await SecureStorage.Default.SetAsync("usuarioEmail", Email);
 
-                    // Limpiar los campos de entrada
+                    // Limpiar campos
                     Email = string.Empty;
                     Password = string.Empty;
 
-                    // Navegar a la página principal
+                    // Navegar a HomePage
                     await Shell.Current.GoToAsync("//HomePage");
                 }
                 else
@@ -62,28 +87,12 @@ namespace MyDMG_app.ViewModels
             }
         }
 
-        private async Task Registrar()
-        {
-            try
-            {
-                var usuario = new ClsUsuario { Email = Email, Password = Password };
-                bool result = await _usuarioBL.RegistrarAsync(usuario);
-
-                if (result)
-                    await App.Current.MainPage.DisplayAlert("Éxito", "Usuario registrado correctamente", "OK");
-                else
-                    await App.Current.MainPage.DisplayAlert("Error", "No se pudo registrar", "OK");
-            }
-            catch (Exception ex)
-            {
-                await App.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
-            }
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
+
+
 
 

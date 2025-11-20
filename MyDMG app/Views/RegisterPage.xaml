@@ -1,0 +1,25 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MyDMG_app.Views.RegisterPage"
+             xmlns:viewModels="clr-namespace:MyDMG_app.ViewModels"
+             Title="Crear Cuenta">
+
+    <ContentPage.BindingContext>
+        <viewModels:RegisterViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20">
+
+            <Entry Placeholder="Nombre" Text="{Binding Nombre}" />
+            <Entry Placeholder="Correo electrónico" Text="{Binding Email}" Keyboard="Email" />
+            <Entry Placeholder="Contraseña" Text="{Binding Password}" IsPassword="True" />
+            <Entry Placeholder="Confirmar Contraseña" Text="{Binding ConfirmPassword}" IsPassword="True" />
+            <Entry Placeholder="Hermandad" Text="{Binding Hermandad}" />
+
+            <Button Text="Registrar" Command="{Binding RegistrarCommand}" />
+            <Button Text="Iniciar Sesión" Command="{Binding GoToLoginCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

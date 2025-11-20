@@ -11,7 +11,7 @@
     <VerticalStackLayout Padding="30" Spacing="20">  
         <Entry Placeholder="Correo electrónico" Text="{Binding Email}" Keyboard="Email" />  
         <Entry Placeholder="Contraseña" Text="{Binding Password}" IsPassword="True" />  
-        <Button Text="Iniciar Sesión" Command="{Binding LoginCommand}" />  
-        <Button Text="Registrarse" Command="{Binding RegistrarCommand}" />  
+        <Button Text="Iniciar Sesión" Command="{Binding LoginCommand}" />
+        <Button Text="Registrarse" Command="{Binding GoToRegisterCommand}" />
     </VerticalStackLayout>  
 </ContentPage>

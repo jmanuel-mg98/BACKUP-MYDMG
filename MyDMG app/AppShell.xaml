@@ -9,6 +9,9 @@
                   ContentTemplate="{DataTemplate views:LoginPage}" />
     <ShellContent Route="HomePage"
                   ContentTemplate="{DataTemplate views:HomePage}" />
+    <ShellContent Route="RegisterPage"
+              ContentTemplate="{DataTemplate views:RegisterPage}" />
+    
 
     
 </Shell>

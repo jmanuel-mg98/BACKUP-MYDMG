@@ -1,33 +1,40 @@
 ﻿using ENT;
 using DAL;
 
-
 namespace BL
 {
     public class ClsUsuarioBL
     {
         private readonly ClsUsuarioDal _usuarioDal;
+        private readonly ClsDetalleUsuarioDal _detalleUsuarioDal;
 
         public ClsUsuarioBL()
         {
             _usuarioDal = new ClsUsuarioDal();
+            _detalleUsuarioDal = new ClsDetalleUsuarioDal();
         }
 
         public async Task<bool> LoginAsync(string email, string password)
         {
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
-                throw new ArgumentException("Email y contraseña son requeridos");
-
             return await _usuarioDal.LoginAsync(email, password);
         }
 
-        public async Task<bool> RegistrarAsync(ClsUsuario usuario)
+        public async Task<bool> RegistrarUsuarioCompleto(ClsUsuario usuario)
         {
-            if (string.IsNullOrWhiteSpace(usuario.Email) || string.IsNullOrWhiteSpace(usuario.Password))
-                throw new ArgumentException("Email y contraseña son requeridos");
+            // 1️⃣ Registrar en Auth
+            bool ok = await _usuarioDal.RegistrarAsync(usuario);
+            if (!ok) return false;
 
-            return await _usuarioDal.RegistrarAsync(usuario);
+            // 2️⃣ Iniciar sesión para obtener UserId
+            bool loginOk = await _usuarioDal.LoginAsync(usuario.Email, usuario.Password);
+            if (!loginOk) return false;
+
+            // 3️⃣ Crear detalle en DB
+            bool detalleOk = await _detalleUsuarioDal.CrearDetalleUsuarioAsync(usuario);
+            return detalleOk;
         }
     }
 }
+
+
 

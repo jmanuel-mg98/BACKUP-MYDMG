@@ -5,12 +5,6 @@ namespace DAL
 {
     public class ClsUsuarioDal
     {
-
-        public ClsUsuarioDal()
-        {
-           
-        }
-
         public async Task<bool> LoginAsync(string email, string password)
         {
             return await ConectorAppwrite.iniciarSesion(email, password);
@@ -22,4 +16,5 @@ namespace DAL
         }
     }
 }
+
 

@@ -17,7 +17,7 @@ namespace MyDMG_app.viewModels
         public HomeViewModel()
         {
             LogoutCommand = new Command(async () => await Logout());
-            NombreUsuario = ConectorAppwrite.user.UserId == null ? "Usuario Desconocido" : ConectorAppwrite.user.UserId;
+            NombreUsuario = ConectorAppwrite.Sesion.UserId == null ? "Usuario Desconocido" : ConectorAppwrite.Sesion.UserId;
         }
 
         private async Task Logout()
