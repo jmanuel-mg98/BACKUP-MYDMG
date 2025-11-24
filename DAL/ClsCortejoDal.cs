@@ -2,100 +2,157 @@
 using Appwrite.Services;
 using ConectorAppWrite;
 using ENT;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DAL
 {
     public class ClsCortejoDal
     {
         private readonly Databases _db;
-        private const string DATABASE_ID = "691ce72500229460591f"; // ID real de tu DB
-        private const string COLLECTION_ID = "cortejos"; // ID real de tu tabla
+        private const string DATABASE_ID = "691ce72500229460591f";
+        private const string COLLECTION_ID = "cortejos";
 
         public ClsCortejoDal()
         {
             _db = new Databases(ConectorAppwrite.Client);
         }
 
-        public async Task<bool> CrearCortejoAsync(ClsCortejo cortejo)
+        // -----------------------
+        // Crear Cortejo
+        // -----------------------
+        public async Task<bool> CrearCortejoAsync(ClsCortejo c)
         {
             try
             {
-                string userId = ConectorAppwrite.Sesion?.UserId;
-                if (string.IsNullOrEmpty(userId))
-                    return false;
-
                 await _db.CreateDocument(
                     databaseId: DATABASE_ID,
                     collectionId: COLLECTION_ID,
                     documentId: ID.Unique(),
                     data: new Dictionary<string, object>
                     {
-                        { "idUsuario", userId },
-                        { "nombreCortejo", cortejo.NombreCortejo },
-                        { "nParticipantes", cortejo.NParticipantes },
-                        { "esPaso", cortejo.EsPaso },
-                        { "cantidadPasos", cortejo.CantidadPasos },
-                        { "llevaBanda", cortejo.LlevaBanda },
-                        { "velocidadMedia", cortejo.VelocidadMedia }
+                        { "NombreCortejo", c.NombreCortejo },
+                        { "NParticipantes", c.NParticipantes },
+                        { "EsPaso", c.EsPaso },
+                        { "CantidadPasos", c.CantidadPasos },
+                        { "LlevaBanda", c.LlevaBanda },
+                        { "VelocidadMedia", c.VelocidadMedia },
+                        { "IdUsuario", c.IdUsuario }
                     }
                 );
 
                 return true;
             }
-            catch (AppwriteException ex)
+            catch
             {
-                throw new Exception($"Error al crear cortejo: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error inesperado al crear cortejo: {ex.Message}");
+                return false;
             }
         }
 
-        public async Task<List<ClsCortejo>> ObtenerCortejosPorUsuarioAsync(string userId)
+        // -----------------------
+        // Obtener Cortejos de un usuario
+        // -----------------------
+        public async Task<List<ClsCortejo>> ObtenerCortejosUsuarioActualAsync()
+        {
+            string userId = ConectorAppwrite.Sesion?.UserId;
+            if (string.IsNullOrEmpty(userId))
+                return new();
+
+            var result = await _db.ListDocuments(
+                databaseId: DATABASE_ID,
+                collectionId: COLLECTION_ID,
+                queries: new List<string>
+                {
+                    Query.Equal("idUsuario", userId)
+                }
+            );
+
+            List<ClsCortejo> lista = new();
+
+            foreach (var doc in result.Documents)
+            {
+                lista.Add(MapearCortejo(doc.Id, doc.Data));
+            }
+
+            return lista;
+        }
+
+        // -----------------------
+        // Obtener por ID
+        // -----------------------
+        public async Task<ClsCortejo> ObtenerCortejoPorIdAsync(string id)
+        {
+            var doc = await _db.GetDocument(DATABASE_ID, COLLECTION_ID, id);
+            return MapearCortejo(doc.Id, doc.Data);
+        }
+
+        // -----------------------
+        // Actualizar Cortejo
+        // -----------------------
+        public async Task<bool> ActualizarCortejoAsync(ClsCortejo c)
         {
             try
             {
-                var result = await _db.ListDocuments(
+                await _db.UpdateDocument(
                     databaseId: DATABASE_ID,
                     collectionId: COLLECTION_ID,
-                    queries: new List<string> { Query.Equal("idUsuario", userId) }
+                    documentId: c.Id,
+                    data: new Dictionary<string, object>
+                    {
+                        { "NombreCortejo", c.NombreCortejo },
+                        { "NParticipantes", c.NParticipantes },
+                        { "EsPaso", c.EsPaso },
+                        { "CantidadPasos", c.CantidadPasos },
+                        { "LlevaBanda", c.LlevaBanda },
+                        { "VelocidadMedia", c.VelocidadMedia },
+                        { "IdUsuario", c.IdUsuario }
+                    }
                 );
 
-                var lista = new List<ClsCortejo>();
-
-                foreach (var doc in result.Documents)
-                {
-                    var data = doc.Data;
-                    lista.Add(new ClsCortejo
-                    {
-                        Id = doc.Id,
-                        NombreCortejo = data.ContainsKey("nombreCortejo") ? data["nombreCortejo"].ToString() : "Sin nombre",
-                        NParticipantes = data.ContainsKey("nParticipantes") ? Convert.ToInt32(data["nParticipantes"]) : 0,
-                        EsPaso = data.ContainsKey("esPaso") ? (bool)data["esPaso"] : false,
-                        CantidadPasos = data.ContainsKey("cantidadPasos") ? Convert.ToInt32(data["cantidadPasos"]) : 0,
-                        LlevaBanda = data.ContainsKey("llevaBanda") ? (bool)data["llevaBanda"] : false,
-                        VelocidadMedia = data.ContainsKey("velocidadMedia") ? Convert.ToDouble(data["velocidadMedia"]) : 0,
-                        IdUsuario = data.ContainsKey("idUsuario") ? data["idUsuario"].ToString() : null
-                    });
-                }
-
-                return lista;
+                return true;
             }
-            catch (AppwriteException ex)
+            catch
             {
-                throw new Exception($"Error al obtener cortejos: {ex.Message}");
+                return false;
             }
-            catch (Exception ex)
+        }
+
+        // -----------------------
+        // Eliminar Cortejo
+        // -----------------------
+        public async Task<bool> EliminarCortejoAsync(string id)
+        {
+            try
             {
-                throw new Exception($"Error inesperado al obtener cortejos: {ex.Message}");
+                await _db.DeleteDocument(DATABASE_ID, COLLECTION_ID, id);
+                return true;
             }
+            catch
+            {
+                return false;
+            }
+        }
+
+        // -----------------------
+        // MÉTODO PRIVADO PARA MAPEAR SIN JSON
+        // -----------------------
+        private ClsCortejo MapearCortejo(string id, IDictionary<string, object> data)
+        {
+            return new ClsCortejo
+            {
+                Id = id,
+                NombreCortejo = data.ContainsKey("NombreCortejo") ? data["NombreCortejo"]?.ToString() : "",
+                NParticipantes = data.ContainsKey("NParticipantes") ? Convert.ToInt32(data["NParticipantes"]) : 0,
+                EsPaso = data.ContainsKey("EsPaso") && Convert.ToBoolean(data["EsPaso"]),
+                CantidadPasos = data.ContainsKey("CantidadPasos") ? Convert.ToInt32(data["CantidadPasos"]) : 0,
+                LlevaBanda = data.ContainsKey("LlevaBanda") && Convert.ToBoolean(data["LlevaBanda"]),
+                VelocidadMedia = data.ContainsKey("VelocidadMedia") ? Convert.ToDouble(data["VelocidadMedia"]) : 0,
+                IdUsuario = data.ContainsKey("IdUsuario") ? data["IdUsuario"]?.ToString() : ""
+            };
         }
     }
 }
+
+
+
 
 
 

@@ -10,23 +10,26 @@
     </ContentPage.BindingContext>
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="15">
+        <VerticalStackLayout Padding="20" Spacing="12">
+            <Entry Placeholder="Nombre del cortejo" Text="{Binding NombreCortejo}" />
+            <Entry Placeholder="Número de participantes" Keyboard="Numeric" Text="{Binding NParticipantes}" />
+            <Entry Placeholder="Cantidad de pasos" Keyboard="Numeric" Text="{Binding CantidadPasos}" />
 
-            <!-- Botón de regresar -->
-            <Button Text="Atrás" Command="{Binding VolverHomeCommand}" />
+            <HorizontalStackLayout>
+                <CheckBox IsChecked="{Binding EsPaso}" />
+                <Label Text="¿Es paso?" VerticalOptions="Center" />
+            </HorizontalStackLayout>
 
-            <!-- Campos del formulario -->
-            <Entry Placeholder="Nombre del Cortejo" Text="{Binding NombreCortejo}" />
-            <Entry Placeholder="Número de Participantes" Keyboard="Numeric" Text="{Binding NParticipantes}" />
-            <Entry Placeholder="Es Paso (true/false)" Text="{Binding EsPaso}" />
-            <Entry Placeholder="Cantidad de Pasos" Keyboard="Numeric" Text="{Binding CantidadPasos}" />
-            <Entry Placeholder="Lleva Banda (true/false)" Text="{Binding LlevaBanda}" />
+            <HorizontalStackLayout>
+                <CheckBox IsChecked="{Binding LlevaBanda}" />
+                <Label Text="¿Lleva banda?" VerticalOptions="Center" />
+            </HorizontalStackLayout>
 
-            <!-- Botón de crear cortejo -->
             <Button Text="Crear Cortejo" Command="{Binding CrearCortejoCommand}" />
 
+            <Button Text="Volver" Command="{Binding VolverHomeCommand}" />
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>
+
 

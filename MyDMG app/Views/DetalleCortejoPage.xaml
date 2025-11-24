@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MyDMG_app.ViewModels"
+             x:Class="MyDMG_app.Views.DetalleCortejoPage">
+
+    <ContentPage.BindingContext>
+        <viewModels:DetalleCortejoViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Button Text="Volver"
+                    Command="{Binding VolverCommand}"
+                    BackgroundColor="#CCC"/>
+
+            <Label Text="Detalle del Cortejo"
+                   FontAttributes="Bold"
+                   FontSize="24"
+                   HorizontalOptions="Center"/>
+
+            <Entry Text="{Binding Cortejo.NombreCortejo}" IsEnabled="{Binding Editando}" Placeholder="Nombre"/>
+
+            <Entry Text="{Binding Cortejo.NParticipantes}" IsEnabled="{Binding Editando}" Keyboard="Numeric"/>
+
+            <Switch IsToggled="{Binding Cortejo.EsPaso}" IsEnabled="{Binding Editando}"/>
+            <Label Text="¿Es Paso?" />
+
+            <Entry Text="{Binding Cortejo.CantidadPasos}" IsEnabled="{Binding Editando}" Keyboard="Numeric"/>
+
+            <Switch IsToggled="{Binding Cortejo.LlevaBanda}" IsEnabled="{Binding Editando}"/>
+            <Label Text="¿Lleva Banda?" />
+
+            <Label Text="{Binding Cortejo.VelocidadMedia, StringFormat='Velocidad media: {0:F2} m/min'}"/>
+
+            <Button Text="Editar" Command="{Binding EditarCommand}" />
+            <Button Text="Eliminar" Command="{Binding EliminarCommand}" BackgroundColor="Red" TextColor="White"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
+
+
