@@ -9,36 +9,40 @@
         <viewModels:HomeViewModel />
     </ContentPage.BindingContext>
 
-    <VerticalStackLayout Padding="20" Spacing="10">
+    <!-- ScrollView para toda la pantalla -->
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="10">
 
-        <!-- Títulos y datos del usuario -->
-        <Label Text="Bienvenido a MyDMG App" FontSize="24" HorizontalOptions="Center" />
-        <Label Text="{Binding NombreUsuario}" FontSize="18" HorizontalOptions="Center" />
-        <Label Text="{Binding Hermandad}" FontSize="18" HorizontalOptions="Center" />
+            <!-- Títulos y datos del usuario -->
+            <Label Text="Bienvenido a MyDMG App" FontSize="24" HorizontalOptions="Center" />
+            <Label Text="{Binding NombreUsuario}" FontSize="18" HorizontalOptions="Center" />
+            <Label Text="{Binding Hermandad}" FontSize="18" HorizontalOptions="Center" />
 
-        <!-- Botón crear cortejo -->
-        <Button Text="Crear Cortejo" Command="{Binding CrearCortejoCommand}" />
+            <!-- Botón crear cortejo -->
+            <Button Text="Crear Cortejo" Command="{Binding CrearCortejoCommand}" />
 
-        <!-- Listado de cortejos dentro de un CollectionView scrollable -->
-        <CollectionView ItemsSource="{Binding Cortejos}" 
-                        VerticalOptions="FillAndExpand">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <StackLayout Padding="10" Margin="5" BackgroundColor="#EEE" Spacing="5">
-                        <Label Text="{Binding NombreCortejo}" FontSize="16" />
-                        <Label Text="{Binding NParticipantes, StringFormat='Participantes: {0}'}" />
-                        <Label Text="{Binding CantidadPasos, StringFormat='Cantidad Pasos: {0}'}" />
-                        <Label Text="{Binding VelocidadMedia, StringFormat='Velocidad Media: {0:F2}'}" />
-                    </StackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+            <!-- Listado de cortejos -->
+            <CollectionView ItemsSource="{Binding Cortejos}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="10" Margin="5" BackgroundColor="#EEE" Spacing="5">
+                            <Label Text="{Binding NombreCortejo}" FontSize="16" />
+                            <Label Text="{Binding NParticipantes, StringFormat='Participantes: {0}'}" />
+                            <Label Text="{Binding CantidadPasos, StringFormat='Cantidad Pasos: {0}'}" />
+                            <Label Text="{Binding VelocidadMedia, StringFormat='Velocidad Media: {0:F2}'}" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-        <!-- Botón cerrar sesión al final -->
-        <Button Text="Cerrar Sesión" Command="{Binding LogoutCommand}" />
+            <!-- Botón cerrar sesión al final -->
+            <Button Text="Cerrar Sesión" Command="{Binding LogoutCommand}" />
 
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>
+
 
 
 

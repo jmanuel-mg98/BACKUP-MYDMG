@@ -10,15 +10,23 @@
     </ContentPage.BindingContext>
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="10">
-            <Entry Placeholder="Nombre Cortejo" Text="{Binding NombreCortejo}" />
-            <Entry Placeholder="Número de Participantes" Keyboard="Numeric" Text="{Binding NParticipantes}" />
-            <Switch IsToggled="{Binding EsPaso}" />
-            <Entry Placeholder="Cantidad Pasos" Keyboard="Numeric" Text="{Binding CantidadPasos}" />
-            <Switch IsToggled="{Binding LlevaBanda}" />
+        <VerticalStackLayout Padding="20" Spacing="15">
 
+            <!-- Botón de regresar -->
+            <Button Text="Atrás" Command="{Binding VolverHomeCommand}" />
+
+            <!-- Campos del formulario -->
+            <Entry Placeholder="Nombre del Cortejo" Text="{Binding NombreCortejo}" />
+            <Entry Placeholder="Número de Participantes" Keyboard="Numeric" Text="{Binding NParticipantes}" />
+            <Entry Placeholder="Es Paso (true/false)" Text="{Binding EsPaso}" />
+            <Entry Placeholder="Cantidad de Pasos" Keyboard="Numeric" Text="{Binding CantidadPasos}" />
+            <Entry Placeholder="Lleva Banda (true/false)" Text="{Binding LlevaBanda}" />
+
+            <!-- Botón de crear cortejo -->
             <Button Text="Crear Cortejo" Command="{Binding CrearCortejoCommand}" />
+
         </VerticalStackLayout>
     </ScrollView>
+
 </ContentPage>
 
