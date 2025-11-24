@@ -1,6 +1,7 @@
-﻿using ConectorAppWrite;
+﻿using BL;
+using ConectorAppWrite;
+using DAL;
 using ENT;
-using BL;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -17,6 +18,7 @@ namespace MyDMG_app.ViewModels
 
         private string _nombreUsuario;
         private string _hermandad;
+        private ObservableCollection<ClsCortejo> _cortejos;
 
         public string NombreUsuario
         {
@@ -30,22 +32,30 @@ namespace MyDMG_app.ViewModels
             set { _hermandad = value; OnPropertyChanged(); }
         }
 
-        public ObservableCollection<ClsCortejo> Cortejos { get; set; } = new ObservableCollection<ClsCortejo>();
+        public ObservableCollection<ClsCortejo> Cortejos
+        {
+            get => _cortejos;
+            set { _cortejos = value; OnPropertyChanged(); }
+        }
 
         public ICommand LogoutCommand { get; }
-        public ICommand NavegarCrearCortejoCommand { get; }
+        public ICommand CrearCortejoCommand { get; }
 
         public HomeViewModel()
         {
             _usuarioBL = new ClsUsuarioBl();
             _cortejoBL = new ClsCortejoBl();
 
-            LogoutCommand = new Command(async () => await Logout());
-            NavegarCrearCortejoCommand = new Command(async () => await Shell.Current.GoToAsync("//CrearCortejoPage"));
+            Cortejos = new ObservableCollection<ClsCortejo>();
 
-            // Cargar datos y cortejos al inicio
-            Task.Run(async () => await CargarDatosUsuarioAsync());
-            Task.Run(async () => await CargarCortejosAsync());
+            LogoutCommand = new Command(async () => await Logout());
+            CrearCortejoCommand = new Command(async () => await Shell.Current.GoToAsync("//CrearCortejoPage"));
+
+            Task.Run(async () =>
+            {
+                await CargarDatosUsuarioAsync();
+                await CargarCortejosAsync();
+            });
         }
 
         public async Task CargarDatosUsuarioAsync()
@@ -61,17 +71,8 @@ namespace MyDMG_app.ViewModels
                 }
 
                 var usuarioCompleto = await _usuarioBL.ObtenerUsuarioCompletoAsync(sesion.UserId);
-
-                if (usuarioCompleto != null)
-                {
-                    NombreUsuario = usuarioCompleto.Nombre ?? "Sin nombre";
-                    Hermandad = usuarioCompleto.Hermandad ?? "Sin hermandad";
-                }
-                else
-                {
-                    NombreUsuario = "Error";
-                    Hermandad = "No se pudo cargar";
-                }
+                NombreUsuario = usuarioCompleto?.Nombre ?? "Sin nombre";
+                Hermandad = usuarioCompleto?.Hermandad ?? "Sin hermandad";
             }
             catch (Exception ex)
             {
@@ -84,29 +85,26 @@ namespace MyDMG_app.ViewModels
         {
             try
             {
-                Cortejos.Clear();
                 var sesion = await ConectorAppwrite.GetSesionActual();
                 if (sesion == null) return;
 
-                var listaCortejos = await _cortejoBL.ObtenerCortejosUsuarioAsync(sesion.UserId);
-                foreach (var c in listaCortejos)
+                var lista = await _cortejoBL.ObtenerCortejosPorUsuarioAsync(sesion.UserId);
+                Cortejos.Clear();
+                foreach (var c in lista)
                     Cortejos.Add(c);
             }
             catch (Exception ex)
             {
-                // Manejar errores de carga de cortejos
+                // Puedes manejar error o mostrar alert
             }
         }
 
         private async Task Logout()
         {
             ConectorAppwrite.cerrarSesion();
-
-            // Limpiar datos y lista
+            Cortejos.Clear();
             NombreUsuario = string.Empty;
             Hermandad = string.Empty;
-            Cortejos.Clear();
-
             await Shell.Current.GoToAsync("//LoginPage");
         }
 
@@ -115,6 +113,7 @@ namespace MyDMG_app.ViewModels
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
+
 
 
 

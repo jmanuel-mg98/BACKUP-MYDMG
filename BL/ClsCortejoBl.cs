@@ -7,13 +7,25 @@ namespace BL
 {
     public class ClsCortejoBl
     {
-        private readonly ClsCortejoDal _dal = new ClsCortejoDal();
+        private readonly ClsCortejoDal _cortejoDal;
 
-        public Task<bool> CrearCortejoAsync(ClsCortejo cortejo) => _dal.CrearCortejoAsync(cortejo);
+        public ClsCortejoBl()
+        {
+            _cortejoDal = new ClsCortejoDal();
+        }
 
-        public Task<List<ClsCortejo>> ObtenerCortejosUsuarioAsync(string userId) => _dal.ObtenerCortejosUsuarioAsync(userId);
+        public async Task<bool> CrearCortejoAsync(ClsCortejo cortejo)
+        {
+            return await _cortejoDal.CrearCortejoAsync(cortejo);
+        }
+
+        public async Task<List<ClsCortejo>> ObtenerCortejosPorUsuarioAsync(string userId)
+        {
+            return await _cortejoDal.ObtenerCortejosPorUsuarioAsync(userId);
+        }
     }
 }
+
 
 
 

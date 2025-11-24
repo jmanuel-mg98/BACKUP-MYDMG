@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace ENT
 {
-    public  class ClsCortejo
+    public class ClsCortejo
     {
         public string Id { get; set; }
-
         public string NombreCortejo { get; set; }
         public int NParticipantes { get; set; }
         public bool EsPaso { get; set; }

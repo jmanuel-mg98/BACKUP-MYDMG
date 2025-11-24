@@ -9,24 +9,16 @@
         <viewModels:CrearCortejoViewModel />
     </ContentPage.BindingContext>
 
-    <VerticalStackLayout Padding="30" Spacing="15">
-        <Label Text="Crear Nuevo Cortejo" FontSize="24" HorizontalOptions="Center" />
-
-        <Entry Placeholder="Nombre del cortejo" Text="{Binding NombreCortejo}" />
-        <Entry Placeholder="Número de participantes" Keyboard="Numeric" Text="{Binding NParticipantes}" />
-
-        <HorizontalStackLayout VerticalOptions="Center">
-            <Label Text="¿Es paso?" VerticalOptions="Center"/>
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="10">
+            <Entry Placeholder="Nombre Cortejo" Text="{Binding NombreCortejo}" />
+            <Entry Placeholder="Número de Participantes" Keyboard="Numeric" Text="{Binding NParticipantes}" />
             <Switch IsToggled="{Binding EsPaso}" />
-        </HorizontalStackLayout>
-
-        <Entry Placeholder="Cantidad de pasos" Keyboard="Numeric" Text="{Binding CantidadPasos}" />
-
-        <HorizontalStackLayout VerticalOptions="Center">
-            <Label Text="¿Lleva banda?" VerticalOptions="Center"/>
+            <Entry Placeholder="Cantidad Pasos" Keyboard="Numeric" Text="{Binding CantidadPasos}" />
             <Switch IsToggled="{Binding LlevaBanda}" />
-        </HorizontalStackLayout>
 
-        <Button Text="Crear Cortejo" Command="{Binding CrearCortejoCommand}" />
-    </VerticalStackLayout>
+            <Button Text="Crear Cortejo" Command="{Binding CrearCortejoCommand}" />
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
+

@@ -2,6 +2,7 @@
 using Appwrite.Services;
 using ConectorAppWrite;
 using ENT;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,8 +11,8 @@ namespace DAL
     public class ClsCortejoDal
     {
         private readonly Databases _db;
-        private const string DATABASE_ID = "691ce72500229460591f";
-        private const string COLLECTION_ID = "cortejos";
+        private const string DATABASE_ID = "691ce72500229460591f"; // ID real de tu DB
+        private const string COLLECTION_ID = "cortejos"; // ID real de tu tabla
 
         public ClsCortejoDal()
         {
@@ -22,62 +23,75 @@ namespace DAL
         {
             try
             {
+                string userId = ConectorAppwrite.Sesion?.UserId;
+                if (string.IsNullOrEmpty(userId))
+                    return false;
+
                 await _db.CreateDocument(
                     databaseId: DATABASE_ID,
                     collectionId: COLLECTION_ID,
                     documentId: ID.Unique(),
                     data: new Dictionary<string, object>
                     {
-                        { "NombreCortejo", cortejo.NombreCortejo },
+                        { "idUsuario", userId },
+                        { "nombreCortejo", cortejo.NombreCortejo },
                         { "nParticipantes", cortejo.NParticipantes },
                         { "esPaso", cortejo.EsPaso },
                         { "cantidadPasos", cortejo.CantidadPasos },
                         { "llevaBanda", cortejo.LlevaBanda },
-                        { "velocidadMedia", cortejo.VelocidadMedia },
-                        { "idUsuario", cortejo.IdUsuario }
-                    });
+                        { "velocidadMedia", cortejo.VelocidadMedia }
+                    }
+                );
+
                 return true;
             }
-            catch
+            catch (AppwriteException ex)
             {
-                return false;
+                throw new Exception($"Error al crear cortejo: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error inesperado al crear cortejo: {ex.Message}");
             }
         }
 
-        public async Task<List<ClsCortejo>> ObtenerCortejosUsuarioAsync(string userId)
+        public async Task<List<ClsCortejo>> ObtenerCortejosPorUsuarioAsync(string userId)
         {
             try
             {
                 var result = await _db.ListDocuments(
                     databaseId: DATABASE_ID,
                     collectionId: COLLECTION_ID,
-                    queries: new List<string>
-                    {
-                        Query.Equal("idUsuario", userId)
-                    }
+                    queries: new List<string> { Query.Equal("idUsuario", userId) }
                 );
 
-                var cortejos = new List<ClsCortejo>();
+                var lista = new List<ClsCortejo>();
+
                 foreach (var doc in result.Documents)
                 {
                     var data = doc.Data;
-                    cortejos.Add(new ClsCortejo
+                    lista.Add(new ClsCortejo
                     {
-                        NombreCortejo = data.ContainsKey("NombreCortejo") ? data["NombreCortejo"]?.ToString() : "",
+                        Id = doc.Id,
+                        NombreCortejo = data.ContainsKey("nombreCortejo") ? data["nombreCortejo"].ToString() : "Sin nombre",
                         NParticipantes = data.ContainsKey("nParticipantes") ? Convert.ToInt32(data["nParticipantes"]) : 0,
-                        EsPaso = data.ContainsKey("esPaso") && data["esPaso"] != null && (bool)data["esPaso"],
+                        EsPaso = data.ContainsKey("esPaso") ? (bool)data["esPaso"] : false,
                         CantidadPasos = data.ContainsKey("cantidadPasos") ? Convert.ToInt32(data["cantidadPasos"]) : 0,
-                        LlevaBanda = data.ContainsKey("llevaBanda") && data["llevaBanda"] != null && (bool)data["llevaBanda"],
+                        LlevaBanda = data.ContainsKey("llevaBanda") ? (bool)data["llevaBanda"] : false,
                         VelocidadMedia = data.ContainsKey("velocidadMedia") ? Convert.ToDouble(data["velocidadMedia"]) : 0,
-                        IdUsuario = userId
+                        IdUsuario = data.ContainsKey("idUsuario") ? data["idUsuario"].ToString() : null
                     });
                 }
 
-                return cortejos;
+                return lista;
             }
-            catch
+            catch (AppwriteException ex)
             {
-                return new List<ClsCortejo>();
+                throw new Exception($"Error al obtener cortejos: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error inesperado al obtener cortejos: {ex.Message}");
             }
         }
     }
