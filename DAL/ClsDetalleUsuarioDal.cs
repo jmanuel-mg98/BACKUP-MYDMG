@@ -8,8 +8,8 @@ namespace DAL
     public class ClsDetalleUsuarioDal
     {
         private readonly Databases _db;
-        private const string DATABASE_ID = "691ce72500229460591f";   // ID real de tu DB
-        private const string COLLECTION_ID = "detallesusuario";       // ID real de tu table
+        private const string DATABASE_ID = "691ce72500229460591f";   
+        private const string COLLECTION_ID = "detallesusuario";       
 
         public ClsDetalleUsuarioDal()
         {
@@ -59,9 +59,9 @@ namespace DAL
                 var result = await _db.ListDocuments(
                     databaseId: DATABASE_ID,
                     collectionId: COLLECTION_ID,
-                    queries: new List<string>
+                    queries: new List<string> // Changed from List<object> to List<string>
                     {
-                            $"field=idUsuario&value={userId}"
+                        Query.Equal("idUsuario", userId)
                     }
                 );
 

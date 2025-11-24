@@ -9,19 +9,51 @@
         <viewModels:HomeViewModel />
     </ContentPage.BindingContext>
 
-    <VerticalStackLayout Padding="30" Spacing="20">
-        <Label Text="Bienvenido a MyDMG App"  
-               FontSize="24"  
-               HorizontalOptions="Center" />
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
 
-        <Label Text="{Binding NombreUsuario}"  
-               FontSize="18"  
-               HorizontalOptions="Center" />
+            <!-- Nombre de usuario -->
+            <Label Text="Bienvenido a MyDMG App"
+                   FontSize="24"
+                   HorizontalOptions="Center" />
 
-        <Label Text="{Binding Hermandad}"  
-               FontSize="18"  
-               HorizontalOptions="Center" />
+            <Label Text="{Binding NombreUsuario}"
+                   FontSize="18"
+                   HorizontalOptions="Center" />
 
-        <Button Text="Cerrar Sesión" Command="{Binding LogoutCommand}" />
-    </VerticalStackLayout>
+            <Label Text="{Binding Hermandad}"
+                   FontSize="16"
+                   HorizontalOptions="Center" />
+            <Button Text="Crear Cortejo" Command="{Binding NavegarCrearCortejoCommand}" />
+
+            <Label Text="Tus Cortejos:"
+                   FontSize="20"
+                   Margin="0,20,0,10" />
+
+            <!-- Listado de cortejos -->
+            <CollectionView ItemsSource="{Binding Cortejos}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="0,5" CornerRadius="10" BackgroundColor="#F0F0F0">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding NombreCortejo}" 
+                                       FontSize="18" 
+                                       FontAttributes="Bold"/>
+                                <Label Text="{Binding NParticipantes, StringFormat='Participantes: {0}'}"/>
+                                <Label Text="{Binding CantidadPasos, StringFormat='Cantidad de pasos: {0}'}"/>
+                                <Label Text="{Binding VelocidadMedia, StringFormat='Velocidad media: {0}'}"/>
+                                <Label Text="{Binding EsPaso, StringFormat='Es paso: {0}'}"/>
+                                <Label Text="{Binding LlevaBanda, StringFormat='Lleva banda: {0}'}"/>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Text="Cerrar Sesión" Command="{Binding LogoutCommand}" Margin="0,20,0,0"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
+
+

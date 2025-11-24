@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 
 namespace BL
 {
-    public class ClsUsuarioBL
+    public class ClsUsuarioBl
     {
         private readonly ClsUsuarioDal _usuarioDal;
         private readonly ClsDetalleUsuarioDal _detalleUsuarioDal;
 
-        public ClsUsuarioBL()
+        public ClsUsuarioBl()
         {
             _usuarioDal = new ClsUsuarioDal();
             _detalleUsuarioDal = new ClsDetalleUsuarioDal();
@@ -22,20 +22,35 @@ namespace BL
 
         public async Task<bool> RegistrarUsuarioCompleto(ClsUsuario usuario)
         {
-            // Registrar en Auth
             bool ok = await _usuarioDal.RegistrarAsync(usuario);
             if (!ok) return false;
 
-            // Iniciar sesión para obtener UserId
             bool loginOk = await _usuarioDal.LoginAsync(usuario.Email, usuario.Password);
             if (!loginOk) return false;
 
-            // Crear detalle en DB
             bool detalleOk = await _detalleUsuarioDal.CrearDetalleUsuarioAsync(usuario);
             return detalleOk;
         }
 
-        // 🔹 Nuevo método para obtener detalles del usuario desde BL
+        // 🔹 Nuevo método: obtener usuario completo
+        public async Task<ClsUsuario?> ObtenerUsuarioCompletoAsync(string userId)
+        {
+            // 1️⃣ Datos desde Auth
+            var usuarioAuth = await _usuarioDal.ObtenerUsuarioAuthAsync();
+            if (usuarioAuth == null) return null;
+
+            // 2️⃣ Detalles desde DB
+            var detalles = await _detalleUsuarioDal.ObtenerDetalleUsuarioAsync(userId);
+
+            if (detalles != null)
+            {
+                usuarioAuth.Hermandad = detalles.Hermandad;
+                usuarioAuth.EsAdmin = detalles.EsAdmin;
+            }
+
+            return usuarioAuth;
+        }
+
         public async Task<ClsUsuario> ObtenerDetalleUsuarioActualAsync(string userId)
         {
             return await _detalleUsuarioDal.ObtenerDetalleUsuarioAsync(userId);

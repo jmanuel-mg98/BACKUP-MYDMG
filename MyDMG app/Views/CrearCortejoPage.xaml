@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MyDMG_app.ViewModels"
+             x:Class="MyDMG_app.Views.CrearCortejoPage"
+             Title="Crear Cortejo">
+
+    <ContentPage.BindingContext>
+        <viewModels:CrearCortejoViewModel />
+    </ContentPage.BindingContext>
+
+    <VerticalStackLayout Padding="30" Spacing="15">
+        <Label Text="Crear Nuevo Cortejo" FontSize="24" HorizontalOptions="Center" />
+
+        <Entry Placeholder="Nombre del cortejo" Text="{Binding NombreCortejo}" />
+        <Entry Placeholder="Número de participantes" Keyboard="Numeric" Text="{Binding NParticipantes}" />
+
+        <HorizontalStackLayout VerticalOptions="Center">
+            <Label Text="¿Es paso?" VerticalOptions="Center"/>
+            <Switch IsToggled="{Binding EsPaso}" />
+        </HorizontalStackLayout>
+
+        <Entry Placeholder="Cantidad de pasos" Keyboard="Numeric" Text="{Binding CantidadPasos}" />
+
+        <HorizontalStackLayout VerticalOptions="Center">
+            <Label Text="¿Lleva banda?" VerticalOptions="Center"/>
+            <Switch IsToggled="{Binding LlevaBanda}" />
+        </HorizontalStackLayout>
+
+        <Button Text="Crear Cortejo" Command="{Binding CrearCortejoCommand}" />
+    </VerticalStackLayout>
+</ContentPage>

@@ -2,6 +2,7 @@
 using ENT;
 using BL;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -11,7 +12,8 @@ namespace MyDMG_app.ViewModels
 {
     public class HomeViewModel : INotifyPropertyChanged
     {
-        private readonly ClsUsuarioBL _usuarioBL;
+        private readonly ClsUsuarioBl _usuarioBL;
+        private readonly ClsCortejoBl _cortejoBL;
 
         private string _nombreUsuario;
         private string _hermandad;
@@ -28,34 +30,47 @@ namespace MyDMG_app.ViewModels
             set { _hermandad = value; OnPropertyChanged(); }
         }
 
+        public ObservableCollection<ClsCortejo> Cortejos { get; set; } = new ObservableCollection<ClsCortejo>();
+
         public ICommand LogoutCommand { get; }
+        public ICommand NavegarCrearCortejoCommand { get; }
 
         public HomeViewModel()
         {
-            _usuarioBL = new ClsUsuarioBL();
-            LogoutCommand = new Command(async () => await Logout());
+            _usuarioBL = new ClsUsuarioBl();
+            _cortejoBL = new ClsCortejoBl();
 
-            // Cargar los datos del usuario actual
-            Task.Run(async () => await CargarDatosUsuario());
+            LogoutCommand = new Command(async () => await Logout());
+            NavegarCrearCortejoCommand = new Command(async () => await Shell.Current.GoToAsync("//CrearCortejoPage"));
+
+            // Cargar datos y cortejos al inicio
+            Task.Run(async () => await CargarDatosUsuarioAsync());
+            Task.Run(async () => await CargarCortejosAsync());
         }
 
-        private async Task CargarDatosUsuario()
+        public async Task CargarDatosUsuarioAsync()
         {
             try
             {
-                // Nombre desde Auth
                 var sesion = await ConectorAppwrite.GetSesionActual();
-                NombreUsuario = sesion?.UserId ?? "Usuario Desconocido"; // Aquí puedes reemplazar UserId por nombre si Appwrite lo devuelve
-
-                if (sesion != null)
+                if (sesion == null)
                 {
-                    // Hermandad desde la base de datos
-                    var detalleUsuario = await _usuarioBL.ObtenerDetalleUsuarioActualAsync(sesion.UserId);
-                    Hermandad = detalleUsuario?.Hermandad ?? "Hermandad desconocida";
+                    NombreUsuario = "Usuario desconocido";
+                    Hermandad = "Hermandad desconocida";
+                    return;
+                }
+
+                var usuarioCompleto = await _usuarioBL.ObtenerUsuarioCompletoAsync(sesion.UserId);
+
+                if (usuarioCompleto != null)
+                {
+                    NombreUsuario = usuarioCompleto.Nombre ?? "Sin nombre";
+                    Hermandad = usuarioCompleto.Hermandad ?? "Sin hermandad";
                 }
                 else
                 {
-                    Hermandad = "Hermandad desconocida";
+                    NombreUsuario = "Error";
+                    Hermandad = "No se pudo cargar";
                 }
             }
             catch (Exception ex)
@@ -65,14 +80,42 @@ namespace MyDMG_app.ViewModels
             }
         }
 
+        public async Task CargarCortejosAsync()
+        {
+            try
+            {
+                Cortejos.Clear();
+                var sesion = await ConectorAppwrite.GetSesionActual();
+                if (sesion == null) return;
+
+                var listaCortejos = await _cortejoBL.ObtenerCortejosUsuarioAsync(sesion.UserId);
+                foreach (var c in listaCortejos)
+                    Cortejos.Add(c);
+            }
+            catch (Exception ex)
+            {
+                // Manejar errores de carga de cortejos
+            }
+        }
+
         private async Task Logout()
         {
             ConectorAppwrite.cerrarSesion();
+
+            // Limpiar datos y lista
+            NombreUsuario = string.Empty;
+            Hermandad = string.Empty;
+            Cortejos.Clear();
+
             await Shell.Current.GoToAsync("//LoginPage");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = "") =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        protected void OnPropertyChanged([CallerMemberName] string name = "")
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
+
+
+
+

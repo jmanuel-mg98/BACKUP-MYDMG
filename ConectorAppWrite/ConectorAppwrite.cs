@@ -72,9 +72,14 @@ namespace ConectorAppWrite
             }
         }
 
-        public static void cerrarSesion()
+        public static async Task cerrarSesion()
         {
-            Account.DeleteSession("current");
+            try
+            {
+                await Account.DeleteSession("current");
+            }
+            catch { }
+
             Sesion = null;
         }
     }

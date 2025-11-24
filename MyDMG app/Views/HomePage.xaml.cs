@@ -1,9 +1,28 @@
-namespace MyDMG_app.Views;
+using MyDMG_app.ViewModels;
 
-public partial class HomePage : ContentPage
+namespace MyDMG_app.Views
 {
-    public HomePage()
+    public partial class HomePage : ContentPage
     {
-        InitializeComponent();
+        private readonly HomeViewModel _vm;
+
+        public HomePage()
+        {
+            InitializeComponent();
+            _vm = new HomeViewModel();
+            BindingContext = _vm;
+        }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+
+            // Recargar SIEMPRE datos al entrar, para evitar que aparezcan datos del usuario anterior
+            await _vm.CargarDatosUsuarioAsync();
+
+            // Recargar también la lista de cortejos
+            await _vm.CargarCortejosAsync();
+        }
     }
 }
+

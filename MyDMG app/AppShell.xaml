@@ -10,10 +10,12 @@
     <ShellContent Route="HomePage"
                   ContentTemplate="{DataTemplate views:HomePage}" />
     <ShellContent Route="RegisterPage"
-              ContentTemplate="{DataTemplate views:RegisterPage}" />
-    
+                  ContentTemplate="{DataTemplate views:RegisterPage}" />
+    <ShellContent Route="CrearCortejoPage"
+                  ContentTemplate="{DataTemplate views:CrearCortejoPage}" />
 
-    
+
+
 </Shell>
  
     

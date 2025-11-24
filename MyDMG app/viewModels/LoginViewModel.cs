@@ -13,7 +13,7 @@ namespace MyDMG_app.ViewModels
     {
         private string _email;
         private string _password;
-        private readonly ClsUsuarioBL _usuarioBL;
+        private readonly ClsUsuarioBl _usuarioBL;
 
         public string Email
         {
@@ -32,7 +32,7 @@ namespace MyDMG_app.ViewModels
 
         public LoginViewModel()
         {
-            _usuarioBL = new ClsUsuarioBL();
+            _usuarioBL = new ClsUsuarioBl();
 
             LoginCommand = new Command(async () => await Login());
             GoToRegisterCommand = new Command(async () => await Shell.Current.GoToAsync("//RegisterPage"));
@@ -49,7 +49,9 @@ namespace MyDMG_app.ViewModels
 
                 if (sesionActual != null)
                 {
-                    await Shell.Current.GoToAsync("//HomePage");
+                    // 🔹 Forzar la navegación a HomePage y refrescarla
+                    await Shell.Current.GoToAsync("//HomePage", true);
+
                 }
             }
             catch
@@ -73,8 +75,8 @@ namespace MyDMG_app.ViewModels
                     Email = string.Empty;
                     Password = string.Empty;
 
-                    // Navegar a HomePage
-                    await Shell.Current.GoToAsync("//HomePage");
+                    // 🔹 Navegar a HomePage forzando recarga
+                    await Shell.Current.GoToAsync("//HomePage", true);
                 }
                 else
                 {
@@ -92,6 +94,7 @@ namespace MyDMG_app.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
+
 
 
 

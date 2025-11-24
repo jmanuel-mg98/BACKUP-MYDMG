@@ -8,7 +8,7 @@ namespace MyDMG_app.ViewModels
 {
     public class RegisterViewModel : INotifyPropertyChanged
     {
-        private readonly ClsUsuarioBL _usuarioBL;
+        private readonly ClsUsuarioBl _usuarioBL;
 
         private string _nombre;
         private string _email;
@@ -27,7 +27,7 @@ namespace MyDMG_app.ViewModels
 
         public RegisterViewModel()
         {
-            _usuarioBL = new ClsUsuarioBL();
+            _usuarioBL = new ClsUsuarioBl();
             RegistrarCommand = new Command(async () => await Registrar());
             GoToLoginCommand = new Command(async () => await Shell.Current.GoToAsync("//LoginPage"));
         }
