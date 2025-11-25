@@ -4,20 +4,24 @@ namespace MyDMG_app.Views;
 
 public partial class HomePage : ContentPage
 {
+    private HomeViewModel _vm;
+
     public HomePage()
     {
         InitializeComponent();
+        _vm = new HomeViewModel();
+        BindingContext = _vm;
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        if (BindingContext is HomeViewModel vm)
-        {
-            await vm.CargarDatosUsuarioAsync();
-            await vm.CargarCortejosAsync();
-        }
+
+        // Recargar datos de usuario y cortejos al aparecer
+        await _vm.CargarDatosUsuarioAsync();
+        await _vm.CargarCortejosAsync();
     }
 }
+
 
 

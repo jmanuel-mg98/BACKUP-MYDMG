@@ -1,6 +1,7 @@
 ﻿using ConectorAppWrite;
 using ENT;
 using BL;
+using MyDMG_app.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -43,9 +44,13 @@ namespace MyDMG_app.ViewModels
 
             LogoutCommand = new Command(async () => await Logout());
             CrearCortejoCommand = new Command(async () => await Shell.Current.GoToAsync("//CrearCortejoPage"));
-            SeleccionarCortejoCommand = new Command<ClsCortejo>(async (c) => await AbrirDetalleCortejo(c));
+            SeleccionarCortejoCommand = new Command<ClsCortejo>(c =>
+            {
+                if (c == null) return;
+                CortejoNavigationService.NavigateToCortejo(c.Id);
+            });
 
-            // Cargar datos del usuario y cortejos al iniciar
+            // Cargar datos al iniciar
             Task.Run(async () => await CargarDatosUsuarioAsync());
         }
 
@@ -57,7 +62,6 @@ namespace MyDMG_app.ViewModels
             try
             {
                 var sesion = await ConectorAppwrite.GetSesionActual();
-
                 if (sesion == null)
                 {
                     NombreUsuario = "Usuario desconocido";
@@ -66,10 +70,8 @@ namespace MyDMG_app.ViewModels
                     return;
                 }
 
-                // Appwrite Session no tiene Name, solo UserId
                 NombreUsuario = sesion.UserId ?? "Usuario desconocido";
 
-                // Obtener detalle del usuario (hermandad)
                 var detalle = await _usuarioBL.ObtenerDetalleUsuarioActualAsync(sesion.UserId);
                 Hermandad = detalle?.Hermandad ?? "Hermandad desconocida";
 
@@ -89,7 +91,12 @@ namespace MyDMG_app.ViewModels
         {
             Cortejos.Clear();
 
-            var lista = await _cortejoBL.ObtenerCortejosUsuarioActualAsync() ?? new System.Collections.Generic.List<ClsCortejo>();
+            var sesion = await ConectorAppwrite.GetSesionActual();
+            if (sesion == null) return;
+
+            var lista = await _cortejoBL.GetCortejosUsuarioAsync(sesion.UserId)
+                        ?? new System.Collections.Generic.List<ClsCortejo>();
+
             foreach (var c in lista)
             {
                 Cortejos.Add(c);
@@ -102,7 +109,7 @@ namespace MyDMG_app.ViewModels
         private async Task AbrirDetalleCortejo(ClsCortejo c)
         {
             if (c == null) return;
-            await Shell.Current.GoToAsync($"//DetalleCortejoPage?id={c.Id}");
+            CortejoNavigationService.NavigateToCortejo(c.Id);
         }
 
         // ----------------------
@@ -110,7 +117,7 @@ namespace MyDMG_app.ViewModels
         // ----------------------
         private async Task Logout()
         {
-            ConectorAppwrite.cerrarSesion();
+            await ConectorAppwrite.cerrarSesion();
             NombreUsuario = string.Empty;
             Hermandad = string.Empty;
             Cortejos.Clear();
@@ -122,6 +129,11 @@ namespace MyDMG_app.ViewModels
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
+
+
+
+
+
 
 
 

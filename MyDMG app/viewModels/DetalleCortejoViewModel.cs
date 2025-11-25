@@ -1,68 +1,71 @@
 ﻿using BL;
 using ENT;
+using MyDMG_app.Services;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MyDMG_app.ViewModels
 {
-    [QueryProperty(nameof(Id), "Id")]
     public class DetalleCortejoViewModel : INotifyPropertyChanged
     {
-        private readonly ClsCortejoBl _bl;
+        private readonly ClsCortejoBl _bl = new();
+        private bool _modoEdicion = false;
 
-        private string _id;
-        public string Id
+        public ClsCortejo Cortejo { get; set; } = new();
+
+        public bool ModoEdicion
         {
-            get => _id;
+            get => _modoEdicion;
             set
             {
-                _id = value;
+                _modoEdicion = value;
                 OnPropertyChanged();
-                _ = CargarCortejo();
+                OnPropertyChanged(nameof(NoModoEdicion));
             }
         }
 
-        public ClsCortejo Cortejo { get; set; }
-        public bool Editando { get; set; }
+        public bool NoModoEdicion => !ModoEdicion;
 
         public ICommand EditarCommand { get; }
+        public ICommand GuardarCommand { get; }
         public ICommand EliminarCommand { get; }
         public ICommand VolverCommand { get; }
 
         public DetalleCortejoViewModel()
         {
-            _bl = new ClsCortejoBl();
-            EditarCommand = new Command(async () => await Editar());
+            EditarCommand = new Command(() => ModoEdicion = true);
+            GuardarCommand = new Command(async () => await GuardarCambios());
             EliminarCommand = new Command(async () => await Eliminar());
             VolverCommand = new Command(async () => await Shell.Current.GoToAsync("//HomePage"));
+
+            // Suscribirse al evento del servicio de navegación
+            CortejoNavigationService.CortejoIdChanged += async (s, id) =>
+            {
+                if (!string.IsNullOrEmpty(id))
+                    await CargarCortejo(id);
+            };
         }
 
-        private async Task CargarCortejo()
+        public async Task CargarCortejo(string id)
         {
-            if (string.IsNullOrEmpty(Id))
-                return;
-
-            Cortejo = await _bl.ObtenerCortejoPorIdAsync(Id);
+            Cortejo = await _bl.GetCortejoPorIdAsync(id);
             OnPropertyChanged(nameof(Cortejo));
         }
 
-        private async Task Editar()
+        private async Task GuardarCambios()
         {
-            if (!Editando)
+            bool ok = await _bl.EditarCortejoAsync(Cortejo);
+
+            if (!ok)
             {
-                Editando = true;
-                OnPropertyChanged(nameof(Editando));
+                await App.Current.MainPage.DisplayAlert("Error", "No se pudo editar", "OK");
                 return;
             }
 
-            bool ok = await _bl.ActualizarCortejoAsync(Cortejo);
-
-            if (ok)
-            {
-                await App.Current.MainPage.DisplayAlert("OK", "Cortejo actualizado", "OK");
-                Editando = false;
-                OnPropertyChanged(nameof(Editando));
-            }
+            ModoEdicion = false;
+            await App.Current.MainPage.DisplayAlert("Correcto", "Cortejo actualizado", "OK");
         }
 
         private async Task Eliminar()
@@ -74,7 +77,7 @@ namespace MyDMG_app.ViewModels
 
             if (!confirmar) return;
 
-            bool ok = await _bl.EliminarCortejoAsync(Id);
+            bool ok = await _bl.EliminarCortejoAsync(Cortejo.Id);
 
             if (!ok)
             {
@@ -86,10 +89,16 @@ namespace MyDMG_app.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string n = "") =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
+        protected void OnPropertyChanged([CallerMemberName] string name = "")
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
+
+
+
+
+
+
 
 
 

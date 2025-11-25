@@ -2,44 +2,55 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:MyDMG_app.ViewModels"
-             x:Class="MyDMG_app.Views.DetalleCortejoPage">
+             x:Class="MyDMG_app.Views.DetalleCortejoPage"
+             Title="Detalle Cortejo">
 
     <ContentPage.BindingContext>
         <viewModels:DetalleCortejoViewModel />
     </ContentPage.BindingContext>
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="15">
+        <VerticalStackLayout Padding="20" Spacing="10">
 
-            <Button Text="Volver"
-                    Command="{Binding VolverCommand}"
-                    BackgroundColor="#CCC"/>
+            <Label Text="Detalle Cortejo" FontSize="24" HorizontalOptions="Center" />
 
-            <Label Text="Detalle del Cortejo"
-                   FontAttributes="Bold"
-                   FontSize="24"
-                   HorizontalOptions="Center"/>
+            <Entry Placeholder="Nombre Cortejo"
+                   Text="{Binding Cortejo.NombreCortejo}"
+                   IsEnabled="{Binding ModoEdicion}" />
 
-            <Entry Text="{Binding Cortejo.NombreCortejo}" IsEnabled="{Binding Editando}" Placeholder="Nombre"/>
+            <Entry Placeholder="Número de Participantes"
+                   Keyboard="Numeric"
+                   Text="{Binding Cortejo.NParticipantes}"
+                   IsEnabled="{Binding ModoEdicion}" />
 
-            <Entry Text="{Binding Cortejo.NParticipantes}" IsEnabled="{Binding Editando}" Keyboard="Numeric"/>
+            <Switch IsToggled="{Binding Cortejo.EsPaso}" IsEnabled="{Binding ModoEdicion}" />
+            <Label Text="Es Paso" />
 
-            <Switch IsToggled="{Binding Cortejo.EsPaso}" IsEnabled="{Binding Editando}"/>
-            <Label Text="¿Es Paso?" />
+            <Entry Placeholder="Cantidad de Pasos"
+                   Keyboard="Numeric"
+                   Text="{Binding Cortejo.CantidadPasos}"
+                   IsEnabled="{Binding ModoEdicion}" />
 
-            <Entry Text="{Binding Cortejo.CantidadPasos}" IsEnabled="{Binding Editando}" Keyboard="Numeric"/>
+            <Switch IsToggled="{Binding Cortejo.LlevaBanda}" IsEnabled="{Binding ModoEdicion}" />
+            <Label Text="Lleva Banda" />
 
-            <Switch IsToggled="{Binding Cortejo.LlevaBanda}" IsEnabled="{Binding Editando}"/>
-            <Label Text="¿Lleva Banda?" />
+            <Entry Placeholder="Velocidad Media"
+                   Keyboard="Numeric"
+                   Text="{Binding Cortejo.VelocidadMedia}"
+                   IsEnabled="False" />
 
-            <Label Text="{Binding Cortejo.VelocidadMedia, StringFormat='Velocidad media: {0:F2} m/min'}"/>
-
-            <Button Text="Editar" Command="{Binding EditarCommand}" />
-            <Button Text="Eliminar" Command="{Binding EliminarCommand}" BackgroundColor="Red" TextColor="White"/>
+            <HorizontalStackLayout Spacing="10" Margin="10,20,10,0">
+                <Button Text="Editar" Command="{Binding EditarCommand}" IsVisible="{Binding NoModoEdicion}" />
+                <Button Text="Guardar" Command="{Binding GuardarCommand}" IsVisible="{Binding ModoEdicion}" />
+                <Button Text="Eliminar" Command="{Binding EliminarCommand}" />
+                <Button Text="Volver" Command="{Binding VolverCommand}" />
+            </HorizontalStackLayout>
 
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>
+
+
+
 
 

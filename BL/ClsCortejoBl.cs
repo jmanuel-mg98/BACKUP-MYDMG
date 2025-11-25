@@ -1,48 +1,26 @@
 ﻿using DAL;
 using ENT;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BL
 {
     public class ClsCortejoBl
     {
-        private readonly ClsCortejoDal _dal;
+        private ClsCortejoDal dal = new();
 
-        public ClsCortejoBl()
-        {
-            _dal = new ClsCortejoDal();
-        }
+        public Task<List<ClsCortejo>> GetCortejosUsuarioAsync(string idUsuario)
+            => dal.ObtenerCortejosUsuarioAsync(idUsuario);
 
-        // Crear Cortejo
-        public async Task<bool> CrearCortejoAsync(ClsCortejo c)
-        {
-            return await _dal.CrearCortejoAsync(c);
-        }
+        public Task<ClsCortejo> GetCortejoPorIdAsync(string id)
+            => dal.ObtenerCortejoPorIdAsync(id);
 
-        // Obtener lista de cortejos del usuario actual
-        public async Task<List<ClsCortejo>> ObtenerCortejosUsuarioActualAsync()
-        {
-            return await _dal.ObtenerCortejosUsuarioActualAsync();
-        }
+        public Task<bool> CrearCortejoAsync(ClsCortejo c)
+            => dal.CrearCortejoAsync(c);
 
-        // Obtener cortejo por Id
-        public async Task<ClsCortejo> ObtenerCortejoPorIdAsync(string id)
-        {
-            return await _dal.ObtenerCortejoPorIdAsync(id);
-        }
+        public Task<bool> EditarCortejoAsync(ClsCortejo c)
+            => dal.ActualizarCortejoAsync(c);
 
-        // Actualizar cortejo
-        public async Task<bool> ActualizarCortejoAsync(ClsCortejo c)
-        {
-            return await _dal.ActualizarCortejoAsync(c);
-        }
-
-        // Eliminar cortejo
-        public async Task<bool> EliminarCortejoAsync(string id)
-        {
-            return await _dal.EliminarCortejoAsync(id);
-        }
+        public Task<bool> EliminarCortejoAsync(string id)
+            => dal.EliminarCortejoAsync(id);
     }
 }
 

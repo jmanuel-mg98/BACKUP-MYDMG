@@ -9,52 +9,50 @@
         <viewModels:HomeViewModel />
     </ContentPage.BindingContext>
 
+    <!-- Toda la página scrolleable -->
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="15">
+        <VerticalStackLayout Padding="20" Spacing="10">
 
-            <Label Text="Bienvenido a MyDMG App" FontSize="26" HorizontalOptions="Center"/>
+            <Label Text="Bienvenido a MyDMG App" FontSize="24" HorizontalOptions="Center" />
+            <Label Text="{Binding NombreUsuario}" FontSize="18" HorizontalOptions="Center" />
+            <Label Text="{Binding Hermandad}" FontSize="18" HorizontalOptions="Center" />
 
-            <Label Text="{Binding NombreUsuario}" FontSize="20" HorizontalOptions="Center"/>
-            <Label Text="{Binding Hermandad}" FontSize="20" HorizontalOptions="Center"/>
+            <!-- Botón Crear Cortejo justo después de Hermandad -->
+            <Button Text="Crear Cortejo" Command="{Binding CrearCortejoCommand}" />
 
-            <Button Text="Crear Cortejo" 
-                    Command="{Binding CrearCortejoCommand}" 
-                    BackgroundColor="#007AFF" 
-                    TextColor="White"/>
-
-            <Label Text="Mis Cortejos:" FontSize="18" FontAttributes="Bold"/>
-
+            <!-- Listado de Cortejos -->
             <CollectionView ItemsSource="{Binding Cortejos}"
-                            SelectionMode="None">
-
+                            SelectionMode="Single"
+                            SelectedItem="{Binding SelectedCortejo, Mode=TwoWay}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame Padding="10" Margin="5" CornerRadius="10" BackgroundColor="#EEE">
+                        <Frame Padding="10" Margin="5" BackgroundColor="#EEE" CornerRadius="8">
+                            <StackLayout>
+                                <Label Text="{Binding NombreCortejo}" FontSize="16" />
+                                <Label Text="{Binding NParticipantes, StringFormat='Participantes: {0}'}" />
+                                <Label Text="{Binding CantidadPasos, StringFormat='Cantidad Pasos: {0}'}" />
+                                <Label Text="{Binding VelocidadMedia, StringFormat='Velocidad Media: {0:F2}'}" />
+                            </StackLayout>
+
+                            <!-- Detectar tap y ejecutar comando -->
                             <Frame.GestureRecognizers>
-                                <TapGestureRecognizer 
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:HomeViewModel}}, Path=SeleccionarCortejoCommand}"
-                                    CommandParameter="{Binding .}" />
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:HomeViewModel}}, Path=SeleccionarCortejoCommand}" 
+                                                      CommandParameter="{Binding .}" />
                             </Frame.GestureRecognizers>
 
-                            <VerticalStackLayout>
-                                <Label Text="{Binding NombreCortejo}" FontSize="16" FontAttributes="Bold"/>
-                                <Label Text="{Binding NParticipantes, StringFormat='Participantes: {0}'}"/>
-                            </VerticalStackLayout>
                         </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-
             </CollectionView>
 
-            <Button Text="Cerrar Sesión" 
-                    Command="{Binding LogoutCommand}" 
-                    BackgroundColor="Red" 
-                    TextColor="White"/>
+            <!-- Botón Cerrar Sesión al final -->
+            <Button Text="Cerrar Sesión" Command="{Binding LogoutCommand}" />
 
         </VerticalStackLayout>
     </ScrollView>
 
 </ContentPage>
+
 
 
 
