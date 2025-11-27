@@ -79,9 +79,11 @@ namespace MyDMG_app.ViewModels
                     EsPaso = EsPaso,
                     CantidadPasos = CantidadPasos,
                     LlevaBanda = LlevaBanda,
-                    IdUsuario = userId,
-                    VelocidadMedia = 0 // Inicialmente 0, se puede calcular después
+                    IdUsuario = userId
                 };
+
+                // 🔹 Calcular velocidad media antes de guardar
+                cortejo.VelocidadMedia = Helpers.CortejoHelper.CalcularVelocidadMedia(cortejo);
 
                 bool ok = await _cortejoBL.CrearCortejoAsync(cortejo);
                 if (ok)

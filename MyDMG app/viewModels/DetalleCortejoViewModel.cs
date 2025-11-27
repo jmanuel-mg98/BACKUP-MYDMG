@@ -64,6 +64,8 @@ namespace MyDMG_app.ViewModels
 
         private async Task GuardarCambios()
         {
+            Cortejo.VelocidadMedia = Helpers.CortejoHelper.CalcularVelocidadMedia(Cortejo);
+
             bool ok = await _bl.EditarCortejoAsync(Cortejo);
             if (!ok)
             {
