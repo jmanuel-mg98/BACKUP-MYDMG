@@ -7,27 +7,32 @@ namespace DAL
 {
     public class ClsDetalleUsuarioDal
     {
-        private readonly Databases _db;
+        private static readonly TablesDB _tables = new TablesDB(ConectorAppwrite.Client);
         private const string DATABASE_ID = "691ce72500229460591f";   
-        private const string COLLECTION_ID = "detallesusuario";       
+        private const string COLLECTION_ID = "detallesusuario";
 
         public ClsDetalleUsuarioDal()
-        {
-            _db = new Databases(ConectorAppwrite.Client);
-        }
+        {}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<bool> CrearDetalleUsuarioAsync(ClsUsuario usuario)
         {
             try
             {
-                string userId = ConectorAppwrite.Sesion?.UserId;
+                string? userId = ConectorAppwrite.Sesion?.UserId;
                 if (string.IsNullOrEmpty(userId))
                     return false;
 
-                await _db.CreateDocument(
+
+                await _tables.CreateRow(
                     databaseId: DATABASE_ID,
-                    collectionId: COLLECTION_ID,
-                    documentId: ID.Unique(),
+                    tableId: COLLECTION_ID,
+                    rowId: ID.Unique(),
                     data: new Dictionary<string, object>
                     {
                             { "idUsuario", userId },
@@ -48,26 +53,32 @@ namespace DAL
             }
         }
 
-        // Nuevo método para obtener detalles del usuario por userId
-        public async Task<ClsUsuario> ObtenerDetalleUsuarioAsync(string userId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<ClsUsuario?> ObtenerDetalleUsuarioAsync(string userId)
         {
             try
             {
                 if (string.IsNullOrEmpty(userId))
                     return null;
 
-                var result = await _db.ListDocuments(
+                var result = await _tables.ListRows(
                     databaseId: DATABASE_ID,
-                    collectionId: COLLECTION_ID,
-                    queries: new List<string> // Changed from List<object> to List<string>
+                    tableId: COLLECTION_ID,
+                    queries: new List<string>
                     {
                         Query.Equal("idUsuario", userId)
                     }
                 );
+               
 
-                if (result.Documents.Count > 0)
+                if (result.Rows.Count > 0)
                 {
-                    var doc = result.Documents[0];
+                    var doc = result.Rows[0];
                     var data = doc.Data; // Accede al diccionario de datos del documento
                     return new ClsUsuario
                     {

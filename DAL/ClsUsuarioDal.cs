@@ -14,17 +14,31 @@ namespace DAL
             _account = new Account(ConectorAppwrite.Client);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public async Task<bool> LoginAsync(string email, string password)
         {
             return await ConectorAppwrite.iniciarSesion(email, password);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
         public async Task<bool> RegistrarAsync(ClsUsuario usuario)
         {
             return await ConectorAppwrite.registrarUsuario(usuario.Email, usuario.Password, usuario.Nombre);
         }
 
-        //  Obtener datos del usuario desde AUTH
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public async Task<ClsUsuario?> ObtenerUsuarioAuthAsync()
         {
             try

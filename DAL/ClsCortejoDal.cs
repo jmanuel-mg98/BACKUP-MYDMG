@@ -7,28 +7,32 @@ namespace DAL
 {
     public class ClsCortejoDal
     {
-        private readonly Databases _db;
+        private static readonly TablesDB _tables = new TablesDB(ConectorAppwrite.Client);
 
         private const string DATABASE_ID = "691ce72500229460591f";
         private const string COLLECTION_ID = "cortejos";
 
         public ClsCortejoDal()
         {
-            _db = new Databases(ConectorAppwrite.Client);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<List<ClsCortejo>> ObtenerCortejosUsuarioAsync(string userId)
         {
-            var result = await _db.ListDocuments(
+            var result = await _tables.ListRows(
                 databaseId: DATABASE_ID,
-                collectionId: COLLECTION_ID,
+                tableId: COLLECTION_ID,
                 queries: new List<string>
                 {
                     Query.Equal("idUsuario", userId)
                 }
             );
 
-            return result.Documents.Select(d => new ClsCortejo
+            return result.Rows.Select(d => new ClsCortejo
             {
                 Id = d.Id,
                 NombreCortejo = d.Data["NombreCortejo"].ToString(),
@@ -41,12 +45,17 @@ namespace DAL
             }).ToList();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<ClsCortejo> ObtenerCortejoPorIdAsync(string id)
         {
-            var d = await _db.GetDocument(
+            var d = await _tables.GetRow(
                 databaseId: DATABASE_ID,
-                collectionId: COLLECTION_ID,
-                documentId: id
+                tableId: COLLECTION_ID,
+                rowId: id
             );
 
             return new ClsCortejo
@@ -62,14 +71,19 @@ namespace DAL
             };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
         public async Task<bool> CrearCortejoAsync(ClsCortejo c)
         {
             try
             {
-                await _db.CreateDocument(
+                await _tables.CreateRow(
                     databaseId: DATABASE_ID,
-                    collectionId: COLLECTION_ID,
-                    documentId: ID.Unique(),
+                    tableId: COLLECTION_ID,
+                    rowId: ID.Unique(),
                     data: new Dictionary<string, object>
                     {
                         { "NombreCortejo", c.NombreCortejo },
@@ -89,14 +103,19 @@ namespace DAL
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
         public async Task<bool> ActualizarCortejoAsync(ClsCortejo c)
         {
             try
             {
-                await _db.UpdateDocument(
+                await _tables.UpdateRow(
                     databaseId: DATABASE_ID,
-                    collectionId: COLLECTION_ID,
-                    documentId: c.Id,
+                    tableId: COLLECTION_ID,
+                    rowId: c.Id,
                     data: new Dictionary<string, object>
                     {
                         { "NombreCortejo", c.NombreCortejo },
@@ -115,14 +134,20 @@ namespace DAL
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<bool> EliminarCortejoAsync(string id)
         {
             try
             {
-                await _db.DeleteDocument(
+                await _tables.DeleteRow(
                     databaseId: DATABASE_ID,
-                    collectionId: COLLECTION_ID,
-                    documentId: id
+                    tableId: COLLECTION_ID,
+                    rowId: id
                 );
                 return true;
             }

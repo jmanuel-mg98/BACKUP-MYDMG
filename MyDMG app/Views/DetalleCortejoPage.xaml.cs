@@ -1,4 +1,3 @@
-using Microsoft.Maui.Controls;
 using MyDMG_app.ViewModels;
 
 namespace MyDMG_app.Views
