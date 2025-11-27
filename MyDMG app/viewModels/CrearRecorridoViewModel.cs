@@ -56,9 +56,11 @@ namespace MyDMG_app.ViewModels
 
             CrearRecorridoCommand = new Command(async () => await CrearRecorrido());
             VolverHomeCommand = new Command(async () => await Shell.Current.GoToAsync("//HomePage"));
+        }
 
-            // Cargar cortejos del usuario
-            Task.Run(async () => await CargarCortejos());
+        public async Task InitializeAsync()
+        {
+            await CargarCortejos();
         }
 
         private async Task CargarCortejos()
