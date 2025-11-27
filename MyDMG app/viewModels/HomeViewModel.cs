@@ -1,13 +1,12 @@
 ﻿using ConectorAppWrite;
 using ENT;
 using BL;
-using MyDMG_app.Services;
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
+
 using System.Windows.Input;
+
 
 namespace MyDMG_app.ViewModels
 {
@@ -44,10 +43,12 @@ namespace MyDMG_app.ViewModels
 
             LogoutCommand = new Command(async () => await Logout());
             CrearCortejoCommand = new Command(async () => await Shell.Current.GoToAsync("//CrearCortejoPage"));
+
             SeleccionarCortejoCommand = new Command<ClsCortejo>(c =>
             {
                 if (c == null) return;
-                CortejoNavigationService.NavigateToCortejo(c.Id);
+                // Navegar a detalle pasando el id como query parameter
+                Shell.Current.GoToAsync($"//DetalleCortejoPage?id={c.Id}");
             });
 
             // Cargar datos al iniciar
@@ -70,10 +71,18 @@ namespace MyDMG_app.ViewModels
                     return;
                 }
 
-                NombreUsuario = sesion.UserId ?? "Usuario desconocido";
-
-                var detalle = await _usuarioBL.ObtenerDetalleUsuarioActualAsync(sesion.UserId);
-                Hermandad = detalle?.Hermandad ?? "Hermandad desconocida";
+                // 🔹 Obtener datos desde Auth y DetalleUsuario
+                var usuarioCompleto = await _usuarioBL.ObtenerUsuarioCompletoAsync(sesion.UserId);
+                if (usuarioCompleto != null)
+                {
+                    NombreUsuario = usuarioCompleto.Nombre;
+                    Hermandad = usuarioCompleto.Hermandad ?? "Hermandad desconocida";
+                }
+                else
+                {
+                    NombreUsuario = "Usuario desconocido";
+                    Hermandad = "Hermandad desconocida";
+                }
 
                 await CargarCortejosAsync();
             }
@@ -104,15 +113,6 @@ namespace MyDMG_app.ViewModels
         }
 
         // ----------------------
-        // Abrir detalle cortejo
-        // ----------------------
-        private async Task AbrirDetalleCortejo(ClsCortejo c)
-        {
-            if (c == null) return;
-            CortejoNavigationService.NavigateToCortejo(c.Id);
-        }
-
-        // ----------------------
         // Cerrar sesión
         // ----------------------
         private async Task Logout()
@@ -129,6 +129,7 @@ namespace MyDMG_app.ViewModels
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
+
 
 
 

@@ -1,17 +1,32 @@
 ﻿using BL;
 using ENT;
-using MyDMG_app.Services;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Microsoft.Maui.Controls;
 
 namespace MyDMG_app.ViewModels
 {
+    [QueryProperty(nameof(CortejoId), "id")]
     public class DetalleCortejoViewModel : INotifyPropertyChanged
     {
         private readonly ClsCortejoBl _bl = new();
         private bool _modoEdicion = false;
+        private string _cortejoId;
+
+        public string CortejoId
+        {
+            get => _cortejoId;
+            set
+            {
+                _cortejoId = value;
+                OnPropertyChanged();
+                // Cargar datos automáticamente cuando se setea el id
+                if (!string.IsNullOrEmpty(_cortejoId))
+                    Task.Run(async () => await CargarCortejo(_cortejoId));
+            }
+        }
 
         public ClsCortejo Cortejo { get; set; } = new();
 
@@ -39,13 +54,6 @@ namespace MyDMG_app.ViewModels
             GuardarCommand = new Command(async () => await GuardarCambios());
             EliminarCommand = new Command(async () => await Eliminar());
             VolverCommand = new Command(async () => await Shell.Current.GoToAsync("//HomePage"));
-
-            // Suscribirse al evento del servicio de navegación
-            CortejoNavigationService.CortejoIdChanged += async (s, id) =>
-            {
-                if (!string.IsNullOrEmpty(id))
-                    await CargarCortejo(id);
-            };
         }
 
         public async Task CargarCortejo(string id)
@@ -57,7 +65,6 @@ namespace MyDMG_app.ViewModels
         private async Task GuardarCambios()
         {
             bool ok = await _bl.EditarCortejoAsync(Cortejo);
-
             if (!ok)
             {
                 await App.Current.MainPage.DisplayAlert("Error", "No se pudo editar", "OK");
@@ -93,6 +100,8 @@ namespace MyDMG_app.ViewModels
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
+
+
 
 
 

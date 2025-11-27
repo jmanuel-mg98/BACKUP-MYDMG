@@ -1,14 +1,18 @@
 using Microsoft.Maui.Controls;
+using MyDMG_app.ViewModels;
 
-namespace MyDMG_app.Views;
-
-public partial class DetalleCortejoPage : ContentPage
+namespace MyDMG_app.Views
 {
-    public DetalleCortejoPage()
+    [QueryProperty(nameof(DetalleCortejoViewModel.CortejoId), "id")]
+    public partial class DetalleCortejoPage : ContentPage
     {
-        InitializeComponent();
+        public DetalleCortejoPage()
+        {
+            InitializeComponent();
+        }
     }
 }
+
 
 
 
