@@ -35,6 +35,7 @@ namespace MyDMG_app.ViewModels
         public ICommand LogoutCommand { get; }
         public ICommand CrearCortejoCommand { get; }
         public ICommand SeleccionarCortejoCommand { get; }
+        public ICommand CrearRecorridoCommand { get; }
 
         public HomeViewModel()
         {
@@ -43,6 +44,8 @@ namespace MyDMG_app.ViewModels
 
             LogoutCommand = new Command(async () => await Logout());
             CrearCortejoCommand = new Command(async () => await Shell.Current.GoToAsync("//CrearCortejoPage"));
+
+            CrearRecorridoCommand = new Command(async () => await Shell.Current.GoToAsync("//CrearRecorridoPage"));
 
             SeleccionarCortejoCommand = new Command<ClsCortejo>(c =>
             {

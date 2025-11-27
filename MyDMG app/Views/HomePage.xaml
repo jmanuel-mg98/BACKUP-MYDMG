@@ -19,6 +19,7 @@
 
             <!-- Botón Crear Cortejo justo después de Hermandad -->
             <Button Text="Crear Cortejo" Command="{Binding CrearCortejoCommand}" />
+            <Button Text="Crear Recorrido" Command="{Binding CrearRecorridoCommand}" />
 
             <!-- Listado de Cortejos -->
             <CollectionView ItemsSource="{Binding Cortejos}"
