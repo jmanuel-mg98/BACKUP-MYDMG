@@ -1,6 +1,6 @@
 ﻿using ENT;
 
-namespace MyDMG_app.Helpers
+namespace BL.Helpers
 {
     public static class CortejoHelper
     {

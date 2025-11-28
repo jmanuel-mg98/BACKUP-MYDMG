@@ -35,7 +35,7 @@
                                 <Label Text="{Binding NombreCortejo}" FontSize="16" />
                                 <Label Text="{Binding NParticipantes, StringFormat='Participantes: {0}'}" />
                                 <Label Text="{Binding CantidadPasos, StringFormat='Cantidad Pasos: {0}'}" />
-                                <Label Text="{Binding VelocidadMedia, StringFormat='Velocidad Media: {0:F2}'}" />
+                                <Label Text="{Binding VelocidadMedia, StringFormat='Velocidad Media: {0:F2} metros/minuto'}" />
                             </StackLayout>
 
                             <!-- Detectar tap y ejecutar comando -->

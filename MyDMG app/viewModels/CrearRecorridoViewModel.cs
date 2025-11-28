@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using MyDMG_app.Services;
+using BL.Helpers;
 
 namespace MyDMG_app.ViewModels
 {
@@ -12,6 +14,8 @@ namespace MyDMG_app.ViewModels
     {
         private readonly ClsRecorridoBl _recorridoBL;
         private readonly ClsCortejoBl _cortejoBL;
+        private readonly GeocodingService _geoService = new GeocodingService();
+
 
         private string _nombre;
         private string _lugarPartida;
@@ -98,7 +102,7 @@ namespace MyDMG_app.ViewModels
         {
             try
             {
-                // Validaciones
+                // --- VALIDACIONES ---
                 if (string.IsNullOrWhiteSpace(Nombre))
                 {
                     await App.Current.MainPage.DisplayAlert("Error", "El nombre es obligatorio", "OK");
@@ -124,33 +128,78 @@ namespace MyDMG_app.ViewModels
                     return;
                 }
 
-                // Convertir duración a minutos
+                // --- DURACIÓN EN MINUTOS ---
                 int duracionMinutos = (int)Duracion.TotalMinutes;
 
+                // --- OBTENER COORDENADAS DEL ORIGEN ---
+                var coordenadas = await _geoService.GetCoordinatesAsync(LugarPartida);
+
+                if (coordenadas == null)
+                {
+                    await App.Current.MainPage.DisplayAlert(
+                        "Error",
+                        "No se pudieron obtener las coordenadas del lugar de partida.",
+                        "OK");
+                    return;
+                }
+
+                double latitud = coordenadas.Value.lat;
+                double longitud = coordenadas.Value.lng;
+
+               
+                // CALCULAR METROS DEL RECORRIDO
+              
+                // CortejoSeleccionado ya trae su VelocidadMedia desde la BD
+                double velocidadMedia = CortejoSeleccionado.VelocidadMedia;
+
+                // metros = velocidad (m/min) * duración (min)
+                double metrosRecorrido = velocidadMedia * duracionMinutos;
+
+                Console.WriteLine($"Metros necesarios para el recorrido: {metrosRecorrido}");
+
+                // calcular punto intermedio para los 4 posibles recorridos
+
+                double distanciaMitad = metrosRecorrido / 2;
+
+                // 0 = norte, 180 = sur, 90 = este, 270 = oeste
+                var puntoNorte = GeoHelper.CalcularDestino(latitud, longitud, distanciaMitad, 0);
+                var puntoSur = GeoHelper.CalcularDestino(latitud, longitud, distanciaMitad, 180);
+                var puntoEste = GeoHelper.CalcularDestino(latitud, longitud, distanciaMitad, 90);
+                var puntoOeste = GeoHelper.CalcularDestino(latitud, longitud, distanciaMitad, 270);
+
+                // Puedes verificarlos:
+                Console.WriteLine($"Norte: {puntoNorte.lat}, {puntoNorte.lng}");
+                Console.WriteLine($"Sur: {puntoSur.lat}, {puntoSur.lng}");
+                Console.WriteLine($"Este: {puntoEste.lat}, {puntoEste.lng}");
+                Console.WriteLine($"Oeste: {puntoOeste.lat}, {puntoOeste.lng}");
+
+                // --- CREAR OBJETO SIN GUARDAR LAT/LNG NI METROS ---
                 var recorrido = new ClsRecorrido
                 {
                     IdUsuario = userId,
                     IdCortejo = CortejoSeleccionado.Id,
                     Nombre = Nombre,
                     LugarPartida = LugarPartida,
-                    Horario = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), // Puedes personalizar esto
+                    Horario = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                     DuracionRecorrido = duracionMinutos,
-                    Itinerario = new List<string>() // Por ahora vacío, puedes añadir funcionalidad después
+                    Itinerario = new List<string>()
                 };
 
                 bool ok = await _recorridoBL.CrearRecorridoAsync(recorrido);
 
                 if (ok)
                 {
-                    await App.Current.MainPage.DisplayAlert("Éxito", "Recorrido creado correctamente", "OK");
+                    await App.Current.MainPage.DisplayAlert(
+                        "Éxito",
+                        $"Recorrido creado correctamente.\nDistancia estimada: {metrosRecorrido:F2} metros.",
+                        "OK");
 
-                    // Limpiar campos
+                    // LIMPIAR CAMPOS
                     Nombre = string.Empty;
                     LugarPartida = string.Empty;
                     Duracion = TimeSpan.FromHours(1);
                     CortejoSeleccionado = null;
 
-                    // Volver a HomePage
                     await Shell.Current.GoToAsync("//HomePage");
                 }
                 else
@@ -163,6 +212,7 @@ namespace MyDMG_app.ViewModels
                 await App.Current.MainPage.DisplayAlert("Error inesperado", ex.Message, "OK");
             }
         }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         /// <summary>

@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Maui.Controls;
+using BL.Helpers;
 
 namespace MyDMG_app.ViewModels
 {
@@ -67,7 +68,7 @@ namespace MyDMG_app.ViewModels
         /// <returns></returns>
         private async Task GuardarCambios()
         {
-            Cortejo.VelocidadMedia = Helpers.CortejoHelper.CalcularVelocidadMedia(Cortejo);
+            Cortejo.VelocidadMedia = CortejoHelper.CalcularVelocidadMedia(Cortejo);
 
             bool ok = await _bl.EditarCortejoAsync(Cortejo);
             if (!ok)

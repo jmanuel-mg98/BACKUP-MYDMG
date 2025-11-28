@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Maui.Controls;
+using BL.Helpers;
 
 namespace MyDMG_app.ViewModels
 {
@@ -86,7 +87,7 @@ namespace MyDMG_app.ViewModels
                 };
 
                 // Calcular velocidad media antes de guardar
-                cortejo.VelocidadMedia = Helpers.CortejoHelper.CalcularVelocidadMedia(cortejo);
+                cortejo.VelocidadMedia = CortejoHelper.CalcularVelocidadMedia(cortejo);
 
                 bool ok = await _cortejoBL.CrearCortejoAsync(cortejo);
                 if (ok)
