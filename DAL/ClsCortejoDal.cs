@@ -34,7 +34,7 @@ namespace DAL
 
             return result.Rows.Select(d => new ClsCortejo
             {
-                Id = d.Id,
+                Id = d.Id ?? d.Data["$id"]?.ToString(),
                 NombreCortejo = d.Data["NombreCortejo"].ToString(),
                 NParticipantes = Convert.ToInt32(d.Data["NParticipantes"]),
                 EsPaso = Convert.ToBoolean(d.Data["EsPaso"]),
@@ -60,7 +60,7 @@ namespace DAL
 
             return new ClsCortejo
             {
-                Id = d.Id,
+                Id = d.Id ?? d.Data["$id"]?.ToString(),
                 NombreCortejo = d.Data["NombreCortejo"].ToString(),
                 NParticipantes = Convert.ToInt32(d.Data["NParticipantes"]),
                 EsPaso = Convert.ToBoolean(d.Data["EsPaso"]),

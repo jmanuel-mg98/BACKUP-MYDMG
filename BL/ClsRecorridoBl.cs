@@ -16,9 +16,6 @@ namespace BL
         public Task<bool> CrearRecorridoAsync(ClsRecorrido recorrido)
             => _dal.CrearRecorridoAsync(recorrido);
 
-        public Task<bool> EditarRecorridoAsync(ClsRecorrido recorrido)
-            => _dal.ActualizarRecorridoAsync(recorrido);
-
         public Task<bool> EliminarRecorridoAsync(string id)
             => _dal.EliminarRecorridoAsync(id);
     }

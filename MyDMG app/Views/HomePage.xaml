@@ -17,9 +17,12 @@
             <Label Text="{Binding NombreUsuario}" FontSize="18" HorizontalOptions="Center" />
             <Label Text="{Binding Hermandad}" FontSize="18" HorizontalOptions="Center" />
 
-            <!-- Botón Crear Cortejo justo después de Hermandad -->
+            <!-- Botones Crear Cortejo y Crear Recorrido -->
             <Button Text="Crear Cortejo" Command="{Binding CrearCortejoCommand}" />
             <Button Text="Crear Recorrido" Command="{Binding CrearRecorridoCommand}" />
+
+            <!-- Título Listado de Cortejos -->
+            <Label Text="Mis Cortejos" FontSize="20" FontAttributes="Bold" Margin="0,20,0,5" />
 
             <!-- Listado de Cortejos -->
             <CollectionView ItemsSource="{Binding Cortejos}"
@@ -46,6 +49,33 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
+            <!-- Título Listado de Recorridos -->
+            <Label Text="Mis Recorridos" FontSize="20" FontAttributes="Bold" Margin="0,20,0,5" />
+
+            <!-- Listado de Recorridos -->
+            <CollectionView ItemsSource="{Binding Recorridos}"
+                            SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="5" BackgroundColor="#E8F5E9" CornerRadius="8">
+                            <StackLayout>
+                                <Label Text="{Binding Nombre}" FontSize="16" FontAttributes="Bold" />
+                                <Label Text="{Binding NombreCortejo, StringFormat='Cortejo: {0}'}" />
+                                <Label Text="{Binding LugarPartida, StringFormat='Lugar: {0}'}" />
+                                <Label Text="{Binding DuracionRecorrido, StringFormat='Duración: {0} min'}" />
+                            </StackLayout>
+
+                            <!-- Detectar tap y ejecutar comando -->
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:HomeViewModel}}, Path=SeleccionarRecorridoCommand}" 
+                                                      CommandParameter="{Binding .}" />
+                            </Frame.GestureRecognizers>
+
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
             <!-- Botón Cerrar Sesión al final -->
             <Button Text="Cerrar Sesión" Command="{Binding LogoutCommand}" />
 
@@ -53,7 +83,6 @@
     </ScrollView>
 
 </ContentPage>
-
 
 
 

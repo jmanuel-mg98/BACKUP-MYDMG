@@ -12,6 +12,7 @@
     <ShellContent Route="CrearCortejoPage" ContentTemplate="{DataTemplate views:CrearCortejoPage}" />
     <ShellContent Route="DetalleCortejoPage" ContentTemplate="{DataTemplate views:DetalleCortejoPage}" />
     <ShellContent Route="CrearRecorridoPage" ContentTemplate="{DataTemplate views:CrearRecorridoPage}" />
+    <ShellContent Route="DetalleRecorridoPage" ContentTemplate="{DataTemplate views:DetalleRecorridoPage}" />
 
 </Shell>
 

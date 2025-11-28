@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MyDMG_app.ViewModels"
+             x:Class="MyDMG_app.Views.DetalleRecorridoPage"
+             Title="Detalle Recorrido">
+
+    <ContentPage.BindingContext>
+        <viewModels:DetalleRecorridoViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="10">
+
+            <Label Text="Detalle Recorrido" FontSize="24" HorizontalOptions="Center" />
+
+            <Entry Placeholder="Nombre Recorrido"
+                   Text="{Binding Recorrido.Nombre}"
+                   IsEnabled="False" />
+
+            <Label Text="Cortejo:" FontSize="14" TextColor="Gray" />
+            <Entry Placeholder="Cortejo"
+                   Text="{Binding Recorrido.NombreCortejo}"
+                   IsEnabled="False" />
+
+            <Label Text="Lugar de partida:" FontSize="14" TextColor="Gray" />
+            <Entry Placeholder="Lugar de Partida"
+                   Text="{Binding Recorrido.LugarPartida}"
+                   IsEnabled="False" />
+
+            <Label Text="Horario:" FontSize="14" TextColor="Gray" />
+            <Entry Placeholder="Horario"
+                   Text="{Binding Recorrido.Horario}"
+                   IsEnabled="False" />
+
+            <Label Text="Duración del recorrido (minutos):" FontSize="14" TextColor="Gray" />
+            <Entry Placeholder="Duración"
+                   Text="{Binding Recorrido.DuracionRecorrido}"
+                   IsEnabled="False" />
+
+            <HorizontalStackLayout Spacing="10" Margin="10,20,10,0">
+                <Button Text="Eliminar" Command="{Binding EliminarCommand}" />
+                <Button Text="Volver" Command="{Binding VolverCommand}" />
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

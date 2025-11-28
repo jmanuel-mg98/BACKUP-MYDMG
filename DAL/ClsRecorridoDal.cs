@@ -117,37 +117,6 @@ namespace DAL
         }
 
         /// <summary>
-        /// Actualiza un recorrido existente.
-        /// </summary>
-        /// <param name="recorrido">Recorrido con datos actualizados</param>
-        /// <returns>True si se actualizó correctamente</returns>
-        public async Task<bool> ActualizarRecorridoAsync(ClsRecorrido recorrido)
-        {
-            try
-            {
-                await _tables.UpdateRow(
-                    databaseId: DATABASE_ID,
-                    tableId: COLLECTION_ID,
-                    rowId: recorrido.Id,
-                    data: new Dictionary<string, object>
-                    {
-                        { "idCortejo", recorrido.IdCortejo },
-                        { "nombre", recorrido.Nombre },
-                        { "lugarPartida", recorrido.LugarPartida },
-                        { "horario", recorrido.Horario },
-                        { "duracionRecorrido", recorrido.DuracionRecorrido },
-                        { "itinerario", recorrido.Itinerario ?? new List<string>() }
-                    }
-                );
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error al actualizar recorrido: {ex.Message}");
-            }
-        }
-
-        /// <summary>
         /// Elimina un recorrido de la base de datos.
         /// </summary>
         /// <param name="id">ID del recorrido a eliminar</param>
@@ -165,7 +134,7 @@ namespace DAL
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error al eliminar recorrido: {ex.Message}");
+                return false;
             }
         }
     }
