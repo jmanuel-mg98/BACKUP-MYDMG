@@ -60,7 +60,10 @@ namespace MyDMG_app.ViewModels
             CrearCortejoCommand = new Command(async () => await CrearCortejo());
             VolverHomeCommand = new Command(async () => await Shell.Current.GoToAsync("//HomePage"));
         }
-
+        /// <summary>
+        /// funcion que crea un cortejo llamando a la BL y mostrando alertas en caso de exito o error asignandole el id del usuario que tiene la sesion iniciada
+        /// </summary>
+        /// <returns></returns>
         private async Task CrearCortejo()
         {
             try
@@ -82,7 +85,7 @@ namespace MyDMG_app.ViewModels
                     IdUsuario = userId
                 };
 
-                // 🔹 Calcular velocidad media antes de guardar
+                // Calcular velocidad media antes de guardar
                 cortejo.VelocidadMedia = Helpers.CortejoHelper.CalcularVelocidadMedia(cortejo);
 
                 bool ok = await _cortejoBL.CrearCortejoAsync(cortejo);
@@ -106,8 +109,12 @@ namespace MyDMG_app.ViewModels
                 await App.Current.MainPage.DisplayAlert("Error inesperado", ex.Message, "OK");
             }
         }
-
+     
         public event PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// funcion que notifica el cambio de una propiedad
+        /// </summary>
+        /// <param name="name"></param>
         protected void OnPropertyChanged([CallerMemberName] string name = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }

@@ -15,7 +15,7 @@ namespace DAL
         {}
 
         /// <summary>
-        /// 
+        /// llama al conector para crear el detalle de un usuario para completar el objeto usuario con la hermandad y si es admin o no
         /// </summary>
         /// <param name="usuario"></param>
         /// <returns></returns>
@@ -54,7 +54,7 @@ namespace DAL
         }
 
         /// <summary>
-        /// 
+        /// funcion que obtiene el detalle del usuario (hermandad y si es admin o no) a partir del id del usuario que tiene la sesion iniciada
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>

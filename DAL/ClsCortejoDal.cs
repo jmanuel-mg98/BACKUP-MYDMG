@@ -17,7 +17,7 @@ namespace DAL
         }
 
         /// <summary>
-        /// 
+        /// funcion que llama a la base de datos para obtener los cortejos del usuario que tiene la sesion inicada 
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
@@ -46,7 +46,7 @@ namespace DAL
         }
 
         /// <summary>
-        /// 
+        /// funcion que obtiene un cortejo por su id para podersarselo a detallecortejo
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -72,7 +72,7 @@ namespace DAL
         }
 
         /// <summary>
-        /// 
+        /// funcion que crea un nuevo cortejo en la base de datos asignadole el id del usuario que tiene la sesion iniciada
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
@@ -104,7 +104,7 @@ namespace DAL
         }
 
         /// <summary>
-        /// 
+        /// funcion que actualiza un cortejo en la base de datos a partir de su id
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
@@ -136,7 +136,7 @@ namespace DAL
 
 
         /// <summary>
-        /// 
+        /// funcion que elimina un cortejo de la base de datos a partir de su id 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

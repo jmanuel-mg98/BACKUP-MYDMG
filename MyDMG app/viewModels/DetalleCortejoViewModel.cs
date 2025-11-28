@@ -61,7 +61,10 @@ namespace MyDMG_app.ViewModels
             Cortejo = await _bl.GetCortejoPorIdAsync(id);
             OnPropertyChanged(nameof(Cortejo));
         }
-
+        /// <summary>
+        /// funcion que guarda los cambios realizados en el cortejo llamando a la BL y mostrando alertas en caso de exito o error
+        /// </summary>
+        /// <returns></returns>
         private async Task GuardarCambios()
         {
             Cortejo.VelocidadMedia = Helpers.CortejoHelper.CalcularVelocidadMedia(Cortejo);
@@ -98,6 +101,10 @@ namespace MyDMG_app.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// funcion que notifica el cambio de una propiedad
+        /// </summary>
+        /// <param name="name"></param>
         protected void OnPropertyChanged([CallerMemberName] string name = "")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }

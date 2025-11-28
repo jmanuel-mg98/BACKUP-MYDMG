@@ -15,7 +15,7 @@ namespace DAL
         }
 
         /// <summary>
-        /// 
+        /// funcion que llama al conector para realizar el inicio de sesion de la aplicacion
         /// </summary>
         /// <param name="email"></param>
         /// <param name="password"></param>
@@ -26,7 +26,7 @@ namespace DAL
         }
 
         /// <summary>
-        /// 
+        /// funcion que llama al conector para registrar un nuevo usuario en la aplicacion
         /// </summary>
         /// <param name="usuario"></param>
         /// <returns></returns>
@@ -36,7 +36,7 @@ namespace DAL
         }
 
         /// <summary>
-        /// 
+        /// consigue el usuario autenticado actualmente
         /// </summary>
         /// <returns></returns>
         public async Task<ClsUsuario?> ObtenerUsuarioAuthAsync()

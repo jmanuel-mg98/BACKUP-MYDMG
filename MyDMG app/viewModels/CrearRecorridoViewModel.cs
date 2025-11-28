@@ -57,12 +57,18 @@ namespace MyDMG_app.ViewModels
             CrearRecorridoCommand = new Command(async () => await CrearRecorrido());
             VolverHomeCommand = new Command(async () => await Shell.Current.GoToAsync("//HomePage"));
         }
-
+        /// <summary>
+        /// funcion que inicializa el viewmodel cargando los cortejos
+        /// </summary>
+        /// <returns></returns>
         public async Task InitializeAsync()
         {
             await CargarCortejos();
         }
-
+        /// <summary>
+        /// funcion que carga los cortejos del usuario que tiene la sesion iniciada llamando a la BL y llenando la coleccion observable
+        /// </summary>
+        /// <returns></returns>
         private async Task CargarCortejos()
         {
             try
@@ -84,7 +90,10 @@ namespace MyDMG_app.ViewModels
                 await App.Current.MainPage.DisplayAlert("Error", $"No se pudieron cargar los cortejos: {ex.Message}", "OK");
             }
         }
-
+        /// <summary>
+        /// funcion que crea un recorrido llamando a la BL y mostrando alertas en caso de exito o error asignandole el id del usuario que tiene la sesion iniciada
+        /// </summary>
+        /// <returns></returns>
         private async Task CrearRecorrido()
         {
             try
@@ -156,6 +165,10 @@ namespace MyDMG_app.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// funcion que avisa de que una propiedad ha cambiado
+        /// </summary>
+        /// <param name="name"></param>
         protected void OnPropertyChanged([CallerMemberName] string name = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
