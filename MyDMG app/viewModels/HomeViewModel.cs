@@ -168,6 +168,10 @@ namespace MyDMG_app.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// funcion que notifica el cambio de una propiedad
+        /// </summary>
+        /// <param name="name"></param>
         protected void OnPropertyChanged([CallerMemberName] string name = "")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
